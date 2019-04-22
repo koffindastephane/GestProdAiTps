@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      >
+    <h:head>
+        <title>GESTION DES TITRES D'IDENTITE</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body styleClass="body">
+        <f:view>
+            <div id="page" >
+                <div id="wrapper" style="text-align: center; margin-top: 60px; width: 600px;">
+                    <div id="entete">
+                        <h:graphicImage id="gi_photo"  url="#{mB_Global.cheminEntete()}"
+                                        style="margin: 0 10px;" alt="entete_manquante" />
+                    </div>
+                    <div id="corps">
+                        <h:form id="form" styleClass="form"> 
+                            
+                            <h2 style="font-weight: bold; color: darkorange; ">Gestion de la Production de Titres Identitaires (AI et TPS)</h2>
+
+                            <h3 style="font-weight: bold; color: darkgreen; ">Veuillez vous connecter !</h3>
+                            <p:growl id="message" showDetail="true" />
+                            <h:panelGrid columns="2" style="margin:auto; text-align: right;" >
+
+                                <p:outputLabel styleClass="libelle" for="it_login" style="margin-right: 5px;">Login</p:outputLabel>
+                                <p:inputText required="true" id="it_login" value="#{mB_Connexion.loginEntrePourConnexion}" pt:autofocus="true" />
+
+                                <p:outputLabel styleClass="libelle" for="it_password" style="margin-right: 5px;">Mot de passe</p:outputLabel>
+                                <p:password required="true" id="it_password" value="#{mB_Connexion.passwordEntrePourConnexion}" />
+
+                            </h:panelGrid>
+                            <br/>
+                            <h:commandButton styleClass="boutonSubmitAccueil" value="Valider" action="#{mB_Connexion.seConnecterAvecJaasApresVerificationCredentials()}" />
+
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

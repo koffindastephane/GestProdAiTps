@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>LISTES DES UTILISATEURS</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('administrateurDeCentre_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div>
+                    <h:form styleClass="form" id="form">
+
+                        <h1><h:outputText value="Liste des Utilisateurs du centre (total = #{mB_Administration.listerUtilisateursDuCentre().size()})"/></h1>
+                        <p:dataTable id="datatable" value="#{mB_Administration.listerUtilisateursDuCentre()}" var="item" rendered="#{mB_Administration.listerUtilisateursDuCentre().size() > 0}" 
+                                     tableStyle="width:auto"
+
+                                     style="                           
+                                     border: solid 4px darkgreen;
+                                     border-radius: 15px;
+                                     background-color: white;
+                                     margin: auto;"
+                                     >
+                            <p:column filterBy="#{item.centreTravail.nomCentre}" sortBy="#{item.centreTravail.nomCentre}" width="200">
+                                <f:facet name="header">
+                                    <h:outputText value="Centre de Travail"/>
+                                </f:facet>
+                                <h:outputText value="#{item.centreTravail.nomCentre}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.nomUtilisateur}" sortBy="#{item.nomUtilisateur}">
+                                <f:facet name="header">
+                                    <h:outputText value="Nom"/>
+                                </f:facet>
+                                <h:outputText value="#{item.nomUtilisateur}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.prenomUtilisateur}" sortBy="#{item.prenomUtilisateur}">
+                                <f:facet name="header">
+                                    <h:outputText value="Prenoms"/>
+                                </f:facet>
+                                <h:outputText value="#{item.prenomUtilisateur}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.sexeUtilisateur}" sortBy="#{item.sexeUtilisateur}" filterStyle="width:25px;" filterMaxLength="1" width="35">
+                                <f:facet name="header">
+                                    <h:outputText value="Sexe"/>
+                                </f:facet>
+                                <h:outputText rendered="#{item.sexeUtilisateur == 1}" value="H"/>
+                                <h:outputText rendered="#{item.sexeUtilisateur == 2}" value="F"/>
+                            </p:column>
+                            <p:column filterBy="#{item.login}" sortBy="#{item.login}">
+                                <f:facet name="header">
+                                    <h:outputText value="Login"/>
+                                </f:facet>
+                                <h:outputText value="#{item.login}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.emailUtilisateur}" sortBy="#{item.emailUtilisateur}">
+                                <f:facet name="header">
+                                    <h:outputText value="E-mail"/>
+                                </f:facet>
+                                <h:outputText value="#{item.emailUtilisateur}"/>
+                            </p:column>
+
+                            <p:column filterBy="#{mB_Administration.nombreGroupesDeUnUtilisateur(item.numUtilisateur)}" sortBy="#{mB_Administration.nombreGroupesDeUnUtilisateur(item.numUtilisateur)}">
+                                <f:facet name="header">
+                                    <h:outputText value="Nombre Groupes"/>
+                                </f:facet>
+                                <h:outputText value="#{mB_Administration.nombreGroupesDeUnUtilisateur(item.numUtilisateur)}"/>
+                            </p:column>
+
+                            <p:column  style="width: 100px;">                                                
+                                <p:growl id="message" showDetail="true" />
+                                <p:commandButton value="#{mB_Administration.libelleBoutonActiverOuDesactiverUtilisateur(item)}" action="#{mB_Administration.activerOuDesactiverUtilisateur(mB_Connexion.utilisateurConnecte, item)}" style="width: 100px; background-color: #{mB_Administration.couleurBoutonActiverOuDesactiverUtilisateur(item)};" update="datatable" >
+                                    <p:confirm header="Confirmation" message="Voulez-vous modifier l'état d'activation de cet utilisateur ?" icon="ui-icon-alert" />
+                                </p:commandButton>
+
+                                <div id="confirmDialog"> <ui:include src="/global/confirmDialog.xhtml" /> </div>
+                            </p:column>
+
+                        </p:dataTable>
+
+                        <br/><br/>
+                        <h:commandButton id="cbRetourMenuAdmin" value="#{mB_Administration.libelleBoutonRetourAuMenuAdminCentre()}" action="#{mB_Administration.retournerMenuAdminCentre()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+
+                        <br/><br/>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Administration.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('administrateurDeCentre_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Administration.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>LISTES DES UTILISATEURS</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentStatistique_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div>
+                    <h:form styleClass="form">
+
+                        <h1><h:outputText value="Liste des Demandes (total = #{mB_Statistiques.listerDemandes().size()})"/></h1>
+                        <p:dataTable value="#{mB_Statistiques.listerDemandes()}" var="item" rendered="#{mB_Statistiques.listerDemandes().size() > 0}" 
+                                     style="                           
+                                     border: solid 4px darkgreen;
+                                     border-radius: 15px;
+                                     background-color: white;
+                                     margin: auto;
+                                     width: 1000px; "
+                                     >
+
+                            <p:column filterBy="#{item.numDemande}" sortBy="#{item.numDemande}">
+                                <f:facet name="header">
+                                    <h:outputText value="N°Demande"/>
+                                </f:facet>
+                                <h:outputText value="#{item.numDemande}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Date Creation"/>
+                                </f:facet>
+                                <h:outputText value="#{item.dateCreationDemande}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Date Avancement"/>
+                                </f:facet>
+                                <h:outputText value="#{item.dateStatusActuel}">
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column filterBy="#{item.statusActuel.numStatus}" sortBy="#{item.statusActuel.numStatus}" width="100">
+                                <f:facet name="header">
+                                    <h:outputText value="Avancement"/>
+                                </f:facet>
+                                <h:outputText value="#{item.statusActuel.numStatus}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.recu.numeroRecu}" sortBy="#{item.recu.numeroRecu}">
+                                <f:facet name="header">
+                                    <h:outputText value="N°Recu"/>
+                                </f:facet>
+                                <h:outputText value="#{item.recu.numeroRecu}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.centreTraitement.nomCentre}" sortBy="#{item.centreTraitement.nomCentre}">
+                                <f:facet name="header">
+                                    <h:outputText value="Centre"/>
+                                </f:facet>
+                                <h:outputText value="#{item.centreTraitement.nomCentre}"/>
+                            </p:column>
+                        </p:dataTable>
+
+                    <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Statistiques.retournerAuMenuGeneral()}">
+                        <f:ajax execute="@this" />
+                    </h:commandButton>
+
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentStatistique_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Statistiques.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

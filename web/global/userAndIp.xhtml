@@ -1,0 +1,16 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:panelGrid columns="2"  styleClass="panelGrid" style="float: right; border: 1px solid;">
+        <p:outputLabel>Utilisateur</p:outputLabel>
+        <p:outputLabel style="color: red;"> #{mB_Connexion.utilisateurConnecte.nomUtilisateur} #{mB_Connexion.utilisateurConnecte.prenomUtilisateur}</p:outputLabel>
+        <p:outputLabel>Adresse IP</p:outputLabel>
+        <p:outputLabel style="color: red;"> #{mB_Connexion.recupererAdresseIP()}</p:outputLabel>
+        
+    </h:panelGrid>    
+
+</ui:composition>

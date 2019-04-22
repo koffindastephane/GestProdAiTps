@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>LISTES DES CONNEXIONS DU CENTRE</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('administrateurGeneral_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div>
+                    <h:form styleClass="form">
+
+                        <h1><h:outputText value="Liste des Connexions (total = #{mB_Administration.listerConnexions().size()})"/></h1>
+                        <p:dataTable value="#{mB_Administration.listerConnexions()}" var="item" rendered="#{mB_Administration.listerConnexions().size() > 0}" 
+                                     style="                           
+                                     border: solid 4px darkgreen;
+                                     border-radius: 15px;
+                                     background-color: white;
+                                     margin: auto;
+                                     width: 900px; " 
+                                     >
+
+                            <p:column  filterBy="#{item.adresseIP}" sortBy="#{item.adresseIP}">
+                                <f:facet name="header">
+                                    <h:outputText value="Adresse IP"/>
+                                </f:facet>
+                                <h:outputText value="#{item.adresseIP}"/>
+                            </p:column>
+                            <p:column sortBy="#{item.dateDebut}">
+                                <f:facet name="header">
+                                    <h:outputText value="Debut"/>
+                                </f:facet>
+                                <h:outputText value="#{item.dateDebut}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                                <br/>
+                                <h:outputText value="#{item.dateDebut}">
+                                    <f:convertDateTime pattern="HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{item.dateFin}">
+                                <f:facet name="header">
+                                    <h:outputText value="Fin"/>
+                                </f:facet>
+                                <h:outputText value="#{item.dateFin}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                                <br/>
+                                <h:outputText value="#{item.dateFin}">
+                                    <f:convertDateTime pattern="HH:mm:ss" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column filterBy="#{item.utilisateur.login}" sortBy="#{item.utilisateur.login}">
+                                <f:facet name="header">
+                                    <h:outputText value="Login"/>
+                                </f:facet>
+                                <h:outputText value="#{item.utilisateur.login}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.utilisateur.nomUtilisateur} #{item.utilisateur.prenomUtilisateur}"
+                                      sortBy="#{item.utilisateur.nomUtilisateur} #{item.utilisateur.prenomUtilisateur}">
+                                <f:facet name="header">
+                                    <h:outputText value="Nom Utilisateur"/>
+                                </f:facet>
+                                <h:outputText value="#{item.utilisateur.nomUtilisateur}"/><br/>
+                                <h:outputText value="#{item.utilisateur.prenomUtilisateur}"/>
+                            </p:column>
+                        </p:dataTable> 
+
+                        <br/>
+                        <h:commandButton value="Retour à Administration Générale" id="cbRetourAdministrationGenerale" action="#{mB_Global.redirigerUrl('/autre/administrationGenerale/menuAdministrationGenerale.xhtml')}"><br/>
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                        <br/>
+
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Administration.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('administrateurGeneral_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Administration.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

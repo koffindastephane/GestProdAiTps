@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="recu" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0fd589f2-3e99-4e92-b7c7-b4f2be831012">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="numDemande" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from Petitionnaire p, Demande d, Photo ph, Recu r, Rdv rdv, TypeDemande td, CasDemande cd
+where p.numPetitionnaire = d.petitionnaire
+and d.numDemande = r.demande
+and d.photo = ph.numPhoto
+and d.numDemande = rdv.demande
+and d.typeDemande = td.numTypeDemande
+and d.numDemande = $P{numDemande}
+;]]>
+	</queryString>
+	<field name="numPetitionnaire" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numeroExtraitNaissance" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numeroJugementSuppletif" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nom" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="prenoms" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dateNaissance" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="lieuNaissance" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sexe" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nationalite" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="taille" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="telephone" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="email" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="profession" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="domicile" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="adressePhysique" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="adressePostale" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nomPere" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="prenomsPere" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dateNaissancePere" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="lieuNaissancePere" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nationalitePere" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nomMere" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="prenomsMere" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dateNaissanceMere" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="lieuNaissanceMere" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nationaliteMere" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numDemande" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dateCreationDemande" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dateDepotDemande" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="motifEnvoiEnContentieux" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="motifRejet" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dateStatusActuel" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="docJustificatifNais" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="statusActuel" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="petitionnaire" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="demandeur" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="typeDemande" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="casDemande" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="photo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numPhoto" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nomPhoto" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cheminPhoto" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="lastModifiedPhoto" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sizePhoto" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="heightPhoto" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="widthPhoto" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="typePhoto" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numRecu" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dateRecu" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="montantPaye" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="montantPayeEnLettres" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="demande" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numRdv" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dateRdv" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numTypeDemande" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nomTypeDemande" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numCasDemande" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nomCasDemande" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="227" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{REPORT_COUNT}==1]]></printWhenExpression>
+			<rectangle radius="10">
+				<reportElement x="0" y="0" width="492" height="227" forecolor="#000000" uuid="bcd16a5c-5ab0-4fbe-909a-7fb2b39a3ef5"/>
+			</rectangle>
+			<textField>
+				<reportElement x="96" y="63" width="232" height="20" uuid="3dd250a6-f3fe-4a13-864b-a4be1ca97d20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nom}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="96" y="88" width="232" height="20" uuid="01b9db6a-b975-499e-8baf-f601a9270e1c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prenoms}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="113" width="64" height="20" uuid="a443ef1b-632d-4cd0-b4e8-d4f2bc06d75f"/>
+				<text><![CDATA[Demande n°]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="96" y="113" width="232" height="20" uuid="94c67889-9a13-4d91-8002-dd28571d8bde"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numDemande}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="139" width="76" height="20" uuid="b1c4fca9-4c03-4f69-a65a-d069f780ac62"/>
+				<text><![CDATA[Date Paiement]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="98" y="139" width="153" height="20" uuid="f5315571-f40d-4450-8d99-7d2d4df87f02"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dateCreationDemande}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="23" y="13" width="90" height="20" uuid="6d83dc9b-0d10-4647-8f2c-3a3df1882b6e"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Titre Demandé]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="113" y="13" width="205" height="20" uuid="13ec7a5b-4687-4cc2-84a3-b592b3bb192c"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomTypeDemande}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="165" width="76" height="20" uuid="95e2e904-023f-4edf-af4c-93e57feebf89"/>
+				<text><![CDATA[Montant Payé]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="98" y="165" width="29" height="20" uuid="87577e7b-b18f-45af-a8d1-86d3407aeb6b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{montantPaye}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="63" width="65" height="20" uuid="1e634b88-7fed-4c45-83c4-b1f8378c6e6f"/>
+				<text><![CDATA[Nom]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="21" y="88" width="65" height="20" uuid="9055ef52-23c5-4ad0-b118-6cc9108e80fd"/>
+				<text><![CDATA[Prénoms]]></text>
+			</staticText>
+			<image>
+				<reportElement x="364" y="15" width="119" height="113" uuid="9de407db-1757-4641-8f0f-250e1f8a2020"/>
+				<imageExpression><![CDATA[$F{cheminPhoto}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="127" y="165" width="76" height="20" uuid="01117688-9403-4405-b06d-54bb995203c9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[francs CFA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="194" width="76" height="20" forecolor="#CC3300" uuid="957da3dc-bb37-408c-8d2a-851bf35e53a9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[dateRdv]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="98" y="194" width="100" height="20" forecolor="#CC3300" uuid="d2e6a58b-9aaa-4d9a-9e2f-3e7e5611ae93"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dateRdv}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="36" width="66" height="20" uuid="962ab6ed-4944-482d-9608-046f56d9ad7c"/>
+				<text><![CDATA[Cas Demande]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="98" y="36" width="230" height="20" uuid="f373c09f-4eb3-4919-813a-dbe1f1515405"/>
+				<textFieldExpression><![CDATA[$F{nomCasDemande}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,309 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>ENREGISTREMENT</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptPrimefacesLocales()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentEnregistrementAi_role') or request.isUserInRole('agentEnregistrementTps_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 700px; padding: 10px;">
+
+                    <h:form styleClass="form"  enctype="multipart/form-data">
+
+                        <p:growl id="message" showDetail="true" />
+
+                        <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1}" style="color: green;">DEMANDE ATTESTATION D'IDENTITE (ENREGISTREMENT)</p:outputLabel>
+                        <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" style="color: green;">DEMANDE TITRE PROVISOIRE DE SEJOUR (ENREGISTREMENT)</p:outputLabel>
+                        <br/>
+                        <p:panelGrid columns="2" styleClass="panelGrid" style="margin:auto" >
+
+                            <p:outputLabel styleClass="libelle" for="ol_casDemande">Cas de demande</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.casDemande.nomCasDemande}" id="ol_casDemande" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_recu">N°Reçu</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.numeroRecu}" id="ol_recu" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_datePaiement">Date de Paiement</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.dateVersement}" id="ol_datePaiement">
+                                <f:convertDateTime type="both" pattern="dd/MM/yyyy HH:mm:ss"/>
+                            </p:outputLabel>
+
+                            <p:outputLabel styleClass="libelle" for="ol_montantPaye">Montant payé</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.montantPaye} FCFA" id="ol_montantPaye" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_nom">Nom</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.nom}" id="ol_nom" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_prenoms">Prénoms</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.prenoms}" id="ol_prenoms" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_datNais">Date de naissance</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.dateNaissance}" id="ol_datNais">
+                                <f:convertDateTime type="both" pattern="dd/MM/yyyy"/>
+                            </p:outputLabel>                       
+
+                            <p:outputLabel styleClass="libelle" for="ol_numDem" style="color: blue;">N°Demande</p:outputLabel>
+                            <p:outputLabel styleClass="output" style="color: blue;" value="#{mB_Enregistrement.demande.numDemande}" id="ol_numDem" />
+
+
+                        </p:panelGrid>
+                        <br/>
+
+                        <h3 style="color: green;">Compléments Informations sur Pétitionnaire</h3>
+
+                        <h:panelGrid columns="2"  styleClass="panelGrid" style="margin: auto;">
+
+                            <p:outputLabel styleClass="libelle" for="it_lieuNais">Lieu de naissance</p:outputLabel>
+                            <p:inputText styleClass="inputMaj" value="#{mB_Enregistrement.lieuNaissance}"  id="it_lieuNais"
+                                         onkeypress="return filterInput(event);"/>
+
+
+                            <p:outputLabel styleClass="libelle" for="sor_sexe">Sexe</p:outputLabel>
+                            <h:selectOneRadio value="#{mB_Enregistrement.sexeString}" id="sor_sexe">
+                                <f:selectItem itemValue="1" itemLabel="Masculin" />
+                                <f:selectItem itemValue="2" itemLabel="Feminin" />	   			
+                            </h:selectOneRadio>
+
+                            <p:outputLabel styleClass="libelle" for="it_taille">Taille (en cm)</p:outputLabel>
+                            <p:inputText value="#{mB_Enregistrement.taille}"  id="it_taille" 
+                                         onkeypress="return filterInputNombre(event);" maxlength="3"/>
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" for="it_nationalite">Nationalité</p:outputLabel>
+                            <p:inputText rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" styleClass="inputMaj" value="#{mB_Enregistrement.nationalite}" id="it_nationalite" />
+
+                            <p:outputLabel styleClass="libelle" for="it_domicile">Domicile</p:outputLabel>
+                            <p:inputText styleClass="inputMaj" value="#{mB_Enregistrement.domicile}" id="it_domicile" />
+
+                            <p:outputLabel styleClass="libelle" for="it_profession">Profession</p:outputLabel>
+                            <p:inputText styleClass="inputMaj" value="#{mB_Enregistrement.profession}" id="it_profession" />
+
+                            <p:outputLabel styleClass="libelle" for="it_adressePhysique">Adresse Physique</p:outputLabel>
+                            <p:inputText styleClass="inputMaj" value="#{mB_Enregistrement.adressePhysique}"  id="it_adressePhysique" />
+
+                            <p:outputLabel styleClass="libelle" for="it_adressePostale">Boîte Postale</p:outputLabel>
+                            <p:inputText styleClass="inputMaj" value="#{mB_Enregistrement.adressePostale}"  id="it_adressePostale"
+                                         onkeypress="return filterInputLettresMajEtChiffres(event);" />
+
+
+                            <p:outputLabel styleClass="libelle" for="it_tel1">Télephone 1</p:outputLabel>
+                            <p:inputText value="#{mB_Enregistrement.telephone1}" id="it_tel1"
+                                         onkeypress="return filterInputTelephone(event);" />
+
+                            <p:outputLabel styleClass="libelle" for="it_tel2">Télephone 2</p:outputLabel>
+                            <p:inputText value="#{mB_Enregistrement.telephone2}" id="it_tel2"
+                                         onkeypress="return filterInputTelephone(event);" />
+
+                            <p:outputLabel styleClass="libelle" for="it_tel3">Télephone 3</p:outputLabel>
+                            <p:inputText value="#{mB_Enregistrement.telephone3}" id="it_tel3"
+                                         onkeypress="return filterInputTelephone(event);" />
+
+                            <p:outputLabel styleClass="libelle" for="it_email">E-mail</p:outputLabel>
+                            <p:inputText value="#{mB_Enregistrement.email}" id="it_email" pt:type="email" />
+
+                        </h:panelGrid>
+
+                        <br/>
+                        <h:panelGrid columns="2"
+                                     styleClass="panelGrid" style="margin: auto;">  
+                            <p:outputLabel styleClass="libelle" for="gi_photo" rendered="#{mB_Enregistrement.photoEstRetenue()}" style="vertical-align: central">Photo Retenue</p:outputLabel>
+
+                            <p:graphicImage id="gi_photo" rendered="#{mB_Enregistrement.photoEstRetenue()}" value="#{mB_Enregistrement.photoAAfficher().substring(2)}" width="190" style="margin: 0 10px;" alt="photo_manquante" />
+                        </h:panelGrid>
+                        <h:panelGrid columns="2"
+                                     styleClass="panelGrid" style="margin: auto;"> 
+                            <h:commandButton value="#{mB_Enregistrement.labelBoutonPrisePhoto()}" id="cbPrisePhoto" action="#{mB_Enregistrement.afficherAppareilPhoto()}" />
+
+
+                            <h:commandButton value="Importer une Photo" id="cbUploadPhoto" action="#{mB_Enregistrement.afficherUploadeurFichier()}" />  
+
+                        </h:panelGrid>
+
+                        <h3 style="color: green;">Informations sur Parents</h3>
+
+                        <h:panelGrid columns="2" styleClass="panelGrid" style="margin: auto;">   
+
+                            <p:outputLabel styleClass="libelle" for="it_nomPere">Nom du Père</p:outputLabel>
+                            <p:inputText styleClass="inputMaj" value="#{mB_Enregistrement.nomPere}" id="it_nomPere"
+                                         onkeypress="return filterInput(event);"/>
+
+                            <p:outputLabel styleClass="libelle" for="it_prenomPere">Prénoms du Père</p:outputLabel>
+                            <p:inputText styleClass="inputMaj" value="#{mB_Enregistrement.prenomsPere}" id="it_prenomPere"
+                                         onkeypress="return filterInput(event);"/>
+
+                            <p:outputLabel styleClass="libelle" for="pcal_datNaisPere">Date de naissance du Père</p:outputLabel>
+                            <p:calendar id="pcal_datNaisPere" value="#{mB_Enregistrement.dateNaissancePere}" locale="fr" navigator="true"
+                                        yearRange="#{mB_Global.intervalDateDuCalendrier(1900, mB_Global.agePetitionnaireEnAnneesCiviles(mB_Enregistrement.demande.recu.petitionnaire.dateNaissance))}" pattern="dd/MM/yyyy"
+                                        mindate="#{mB_Global.dateMinimalDuCalendrierPourEnrolement()}"   maxdate="#{mB_Enregistrement.demande.recu.petitionnaire.dateNaissance}"
+                                        readonlyInput="true" />
+
+                            <p:outputLabel styleClass="libelle" for="it_lieuNaisPere">Lieu de Naissance du Père</p:outputLabel>
+                            <p:inputText styleClass="inputMaj" value="#{mB_Enregistrement.lieuNaissancePere}"  id="it_lieuNaisPere"
+                                         onkeypress="return filterInput(event);"/>
+
+
+                            <p:outputLabel /> <br/> 
+
+                            <p:outputLabel styleClass="libelle" for="it_nomMere">Nom de la Mère</p:outputLabel>
+                            <p:inputText styleClass="inputMaj" value="#{mB_Enregistrement.nomMere}" id="it_nomMere" 
+                                         onkeypress="return filterInput(event);"/>
+
+                            <p:outputLabel styleClass="libelle" for="it_prenomMere">Prénoms de la Mère</p:outputLabel>
+                            <p:inputText styleClass="inputMaj" value="#{mB_Enregistrement.prenomsMere}" id="it_prenomMere" 
+                                         onkeypress="return filterInput(event);"/>
+
+                            <p:outputLabel styleClass="libelle" for="pcal_datNaisMere">Date de naissance de la Mère</p:outputLabel>
+                            <p:calendar id="pcal_datNaisMere" value="#{mB_Enregistrement.dateNaissanceMere}" locale="fr" navigator="true"
+                                        yearRange="#{mB_Global.intervalDateDuCalendrier(1900, mB_Global.agePetitionnaireEnAnneesCiviles(mB_Enregistrement.demande.recu.petitionnaire.dateNaissance))}" pattern="dd/MM/yyyy"
+                                        mindate="#{mB_Global.dateMinimalDuCalendrierPourEnrolement()}"   maxdate="#{mB_Enregistrement.demande.recu.petitionnaire.dateNaissance}"
+                                        readonlyInput="true" />
+
+                            <p:outputLabel styleClass="libelle" for="it_lieuNaisMere">Lieu de Naissance de la Mère</p:outputLabel>
+                            <p:inputText styleClass="inputMaj" value="#{mB_Enregistrement.lieuNaissanceMere}"  id="it_lieuNaisMere" 
+                                         onkeypress="return filterInput(event);"/>
+
+                        </h:panelGrid>
+
+                        <h3 style="color: green;">Documents du Pétitionnaire</h3>
+
+                        <h:panelGrid styleClass="panelGrid" style="margin:auto" >
+
+                            <h:panelGroup id="pgp_docNais" rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1}" >    
+
+                                <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.docJustificatifNais == 1}" style="color: green;">Informations sur l'Extrait de naissance du bénéficiaire</p:outputLabel>
+                                <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.docJustificatifNais == 2}" style="color: green;">Informations sur le Jugement Supplétif du bénéficiaire</p:outputLabel>
+
+                                <h:panelGrid columns="2" styleClass="panelGrid">
+                                    <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.docJustificatifNais == 1}" for="it_numeroDocNais">N°Extrait de naissance</p:outputLabel>
+                                    <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.docJustificatifNais == 2}" for="it_numeroDocNais">N°Jugement Supplétif</p:outputLabel>
+                                    <p:inputText rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and (mB_Enregistrement.demande.docJustificatifNais == 1 or mB_Enregistrement.demande.docJustificatifNais == 2)}" value="#{mB_Enregistrement.numeroDocNais}" id="it_numeroDocNais" />
+
+                                    <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.docJustificatifNais == 1}" for="pcal_dateEtablissementDocNais">Extrait datant du</p:outputLabel>
+                                    <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.docJustificatifNais == 2}" for="pcal_dateEtablissementDocNais">Jugement datant du</p:outputLabel>
+                                    <p:calendar rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and (mB_Enregistrement.demande.docJustificatifNais == 1 or mB_Enregistrement.demande.docJustificatifNais == 2)}"
+                                                id="pcal_dateEtablissementDocNais" value="#{mB_Enregistrement.dateEtablissementDocNais}" locale="fr" navigator="true"
+                                                yearRange="#{mB_Global.intervalDateDuCalendrier(mB_Global.recupererAnneeDansDate(mB_Enregistrement.demande.recu.petitionnaire.dateNaissance), 0)}" pattern="dd/MM/yyyy"
+                                                mindate="#{mB_Enregistrement.demande.recu.petitionnaire.dateNaissance}" maxdate="#{mB_Global.recupererDateActuelle()}"
+                                                readonlyInput="true" />
+
+                                    <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.docJustificatifNais == 1}" for="pcal_dateDelivranceDocNais">Extrait délivré le</p:outputLabel>
+                                    <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.docJustificatifNais == 2}" for="pcal_dateDelivranceDocNais">Jugement délivré le</p:outputLabel>
+                                    <p:calendar rendered="#{mB_Enregistrement.demande.docJustificatifNais == 1 or mB_Enregistrement.demande.docJustificatifNais == 2}" id="pcal_dateDelivranceDocNais"
+                                                value="#{mB_Enregistrement.dateDelivranceDocNais}" locale="fr" navigator="true"
+                                                yearRange="#{mB_Global.intervalDateDuCalendrier(mB_Global.recupererAnneeDansDate(mB_Enregistrement.demande.recu.petitionnaire.dateNaissance), 0)}" pattern="dd/MM/yyyy"
+                                                mindate="#{mB_Enregistrement.demande.recu.petitionnaire.dateNaissance}" maxdate="#{mB_Global.recupererDateActuelle()}"
+                                                readonlyInput="true" />              
+
+                                    <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.docJustificatifNais == 1}" for="it_lieuDelivranceDocNais">Lieu de délivrance de l'Extrait</p:outputLabel>
+                                    <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.docJustificatifNais == 2}" for="it_lieuDelivranceDocNais">Lieu de délivrance du Jugement</p:outputLabel>
+                                    <p:inputText styleClass="inputMaj" rendered="#{mB_Enregistrement.demande.docJustificatifNais == 1 or mB_Enregistrement.demande.docJustificatifNais == 2}"  value="#{mB_Enregistrement.lieuDelivranceDocNais}"  id="it_lieuDelivranceDocNais" 
+                                                 onkeypress="return filterInput(event);"/>
+                                </h:panelGrid>
+                            </h:panelGroup>
+
+                            <h:panelGroup id="pgp_pass" rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" >
+                                <p:outputLabel  style="color: green;">Informations sur Passeport</p:outputLabel>                               
+
+                                <h:panelGrid columns="2" styleClass="panelGrid" >
+                                    <p:outputLabel styleClass="libelle" for="it_numeroPass">N°Passeport</p:outputLabel>
+                                    <p:inputText value="#{mB_Enregistrement.numeroPass}" id="it_numeroPass" />
+
+                                    <p:outputLabel styleClass="libelle" for="pcal_dateDelivrancePass">Date de délivrance du Passeport</p:outputLabel>
+                                    <p:calendar id="pcal_dateDelivrancePass" value="#{mB_Enregistrement.dateDelivrancePass}" locale="fr" navigator="true"
+                                                yearRange="#{mB_Global.intervalDateDuCalendrier(mB_Global.recupererAnneeDansDate(mB_Enregistrement.demande.recu.petitionnaire.dateNaissance), 0)}" pattern="dd/MM/yyyy"
+                                                mindate="#{mB_Enregistrement.demande.recu.petitionnaire.dateNaissance}" maxdate="#{mB_Global.recupererDateActuelle()}"
+                                                readonlyInput="true" />
+
+                                    <p:outputLabel styleClass="libelle" for="it_lieuDelivrancePass">Lieu de délivrance du Passeport</p:outputLabel>
+                                    <p:inputText styleClass="inputMaj"  value="#{mB_Enregistrement.lieuDelivrancePass}"  id="it_lieuDelivrancePass"
+                                                 onkeypress="return filterInput(event);"/>
+
+                                    <p:outputLabel styleClass="libelle" for="it_numeroVisa">N°Visa</p:outputLabel>
+                                    <p:inputText value="#{mB_Enregistrement.numeroVisa}" id="it_numeroVisa" />
+
+                                    <p:outputLabel styleClass="libelle" for="pcal_dateDelivranceVisa">Date de délivrance du Visa</p:outputLabel>
+                                    <p:calendar id="pcal_dateDelivranceVisa" value="#{mB_Enregistrement.dateDelivranceVisa}" locale="fr" navigator="true"
+                                                yearRange="#{mB_Global.intervalDateDuCalendrier(mB_Global.recupererAnneeDansDate(mB_Enregistrement.demande.recu.petitionnaire.dateNaissance), 0)}" pattern="dd/MM/yyyy"
+                                                mindate="#{mB_Enregistrement.demande.recu.petitionnaire.dateNaissance}" maxdate="#{mB_Global.recupererDateActuelle()}"
+                                                readonlyInput="true" />
+
+                                    <p:outputLabel styleClass="libelle" for="it_lieuDelivranceVisa">Lieu de délivrance du Visa</p:outputLabel>
+                                    <p:inputText styleClass="inputMaj"   value="#{mB_Enregistrement.lieuDelivranceVisa}"  id="it_lieuDelivranceVisa"
+                                                 onkeypress="return filterInput(event);" maxlength="10"/>
+
+
+                                    <p:outputLabel styleClass="libelle" for="pcal_dateEntreePays">Date d'entrée en Côte d'ivoire</p:outputLabel>
+                                    <p:calendar id="pcal_dateEntreePays" value="#{mB_Enregistrement.dateEntreePays}" locale="fr" navigator="true"
+                                                yearRange="#{mB_Global.intervalDateDuCalendrier(mB_Global.recupererAnneeDansDate(mB_Enregistrement.demande.recu.petitionnaire.dateNaissance), 0)}" pattern="dd/MM/yyyy"
+                                                mindate="#{mB_Enregistrement.demande.recu.petitionnaire.dateNaissance}" maxdate="#{mB_Global.recupererDateActuelle()}"
+                                                readonlyInput="true" />
+
+                                </h:panelGrid>
+                            </h:panelGroup>
+                            <br/>
+                            <h:panelGroup id="pgp_cert" rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.recu.casDemande.numCasDemande == 1}" >
+                                <p:outputLabel styleClass="libelle" style="color: green;">Informations sur le Certificat de Nationalité du bénéficiaire</p:outputLabel>
+
+                                <h:panelGrid columns="2" styleClass="panelGrid" >
+
+                                    <p:outputLabel styleClass="libelle" for="it_numeroCertificatNat">N°Certificat de nationalité</p:outputLabel>
+                                    <p:inputText value="#{mB_Enregistrement.numeroCertificatNat}" id="it_numeroCertificatNat" />
+
+                                    <p:outputLabel styleClass="libelle" for="pcal_dateDelivranceCertificatNat">Date de délivrance du Certificat de nationalité</p:outputLabel>
+                                    <p:calendar id="pcal_dateDelivranceCertificatNat" value="#{mB_Enregistrement.dateDelivranceCertificatNat}" locale="fr" navigator="true"
+                                                yearRange="#{mB_Global.intervalDateDuCalendrier(mB_Global.recupererAnneeDansDate(mB_Enregistrement.demande.recu.petitionnaire.dateNaissance), 0)}" pattern="dd/MM/yyyy"
+                                                mindate="#{mB_Enregistrement.demande.recu.petitionnaire.dateNaissance}" maxdate="#{mB_Global.recupererDateActuelle()}"
+                                                readonlyInput="true" />
+
+                                    <p:outputLabel styleClass="libelle" for="it_lieuDelivranceCertificatNat">Lieu de délivrance du Certificat de nationalité</p:outputLabel>
+                                    <p:inputText styleClass="inputMaj" value="#{mB_Enregistrement.lieuDelivranceCertificatNat}"  id="it_lieuDelivranceCertificatNat" />
+                                </h:panelGrid>
+                            </h:panelGroup>
+
+                        </h:panelGrid>
+
+                        <br/>
+                        <h:commandButton value="Valider les informations complémentaires (informations saisies + photo)" action="#{mB_Enregistrement.completerInformationsBlock()}" styleClass="cbMenuEnregistrement" style="font-weight: bold; width: auto;"/><br/>
+                        <br/>
+                        <h:commandButton value="Retour au Menu Enregistrement" action="#{mB_Global.redirigerUrl('menuEnregistrement.xhtml')}" >
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                        <br/><br/>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Enregistrement.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>                   
+                        <br/><br/>
+                        <h:commandButton value="Reset" type="reset" onclick="if (!confirm('Voulez-vous vraiment effacer toute la saisie ?'))
+                                    return false;" >
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentEnregistrementAi_role') or request.isUserInRole('agentEnregistrementTps_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Caisse.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

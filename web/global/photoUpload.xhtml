@@ -1,0 +1,19 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:panelGrid columns="2" styleClass="panelGrid" style="margin:auto" >
+
+        <p:outputLabel styleClass="libelle" for="if_photoPart">Photo</p:outputLabel>
+        <h:inputFile value="#{mB_Enregistrement.photoPart}" id="if_photoPart" >
+            <f:ajax execute="@this" listener="#{mB_Enregistrement.uploaderPhoto()}" render="@all" />
+        </h:inputFile>
+        <p:graphicImage id="gi_photo" value="#{mB_Enregistrement.photoAAfficher().substring(2)}" width="300" style="margin: 0 10px;" alt="photo_manquante" />
+    </h:panelGrid>
+    <br/>
+    <h:commandButton id="cbValiderPhoto" value="Valider" action="#{mB_Global.redirigerUrl('/enregistrement/complementInfos.xhtml')}" />
+
+</ui:composition>

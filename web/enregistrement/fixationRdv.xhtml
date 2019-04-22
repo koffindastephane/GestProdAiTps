@@ -1,0 +1,262 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>ENREGISTREMENT</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentEnregistrementAi_role') or request.isUserInRole('agentEnregistrementTps_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+
+                    <h:form styleClass="form"  enctype="multipart/form-data">
+                        <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1}" style="color: green;">DEMANDE ATTESTATION D'IDENTITE (ENREGISTREMENT)</p:outputLabel>
+                        <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" style="color: green;">DEMANDE TITRE PROVISOIRE DE SEJOUR (ENREGISTREMENT)</p:outputLabel>
+                        <br/>
+                        <p:panelGrid columns="2" styleClass="panelGrid" style="margin:auto" >
+
+                            <p:outputLabel styleClass="libelle" for="ol_casDemande">Cas de demande</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.casDemande.nomCasDemande}" id="ol_casDemande" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_recu">N°Reçu</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.numeroRecu}" id="ol_recu" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_datPaiement">Date de Paiement</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.dateVersement}" id="ol_datPaiement">
+                                <f:convertDateTime type="both" pattern="dd/MM/yyyy HH:mm:ss"/>
+                            </p:outputLabel>
+
+                            <p:outputLabel styleClass="libelle" for="ol_montantPaye">Montant payé</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.montantPaye} FCFA" id="ol_montantPaye" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_nom">Nom</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.nom}" id="ol_nom" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_prenoms">Prénoms</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.prenoms}" id="ol_prenoms" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_datNais">Date de naissance</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.dateNaissance}" id="ol_datNais">
+                                <f:convertDateTime type="both" pattern="dd/MM/yyyy"/>
+                            </p:outputLabel>                       
+
+                            <p:outputLabel styleClass="libelle" for="ol_numDem" style="color: blue;">N°Demande</p:outputLabel>
+                            <p:outputLabel styleClass="output" style="color: blue;" value="#{mB_Enregistrement.demande.numDemande}" id="ol_numDem" />
+
+
+                        </p:panelGrid>
+                        <br/>
+
+                        <h3 style="color: green;">Informations sur Pétitionnaire</h3>
+                        <p:panelGrid columns="2"  styleClass="panelGrid" style="margin: auto;">
+
+                            <p:outputLabel styleClass="libelle" for="ol_lieuNais">Lieu de naissance</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.lieuNaissance}"  id="ol_lieuNais" />
+
+
+                            <p:outputLabel styleClass="libelle" for="ol_sexe">Sexe</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.sexe}" id="ol_sexe" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_taille">Taille</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.taille} cm"  id="ol_taille" />
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" for="ol_nationalite">Nationalité</p:outputLabel>
+                            <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.nationalite}" id="ol_nationalite" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_domicile">Domicile</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.domicile}" id="ol_domicile" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_profession">Profession</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.profession}" id="ol_profession" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_adressePhysique">Adresse Physique</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.adressePhysique}" id="ol_adressePhysique" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_adressePostale">Boîte Postale</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.adressePostale != null ? mB_Enregistrement.demande.recu.petitionnaire.adressePostale : '--- Non renseigné ---'}"
+                                           style="color: #{mB_Global.couleurSiChampsNonRenseigne(mB_Enregistrement.adressePostale)}" id="ol_adressePostale"  />
+
+                            <p:outputLabel styleClass="libelle" for="ol_tel1">Télephone 1</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.telephone1 != null ? mB_Enregistrement.demande.recu.petitionnaire.telephone1 : '--- Non renseigné ---'}"
+                                           style="color: #{mB_Global.couleurSiChampsNonRenseigne(mB_Enregistrement.telephone1)}" id="ol_tel1" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_tel2">Télephone 2</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.telephone2 != null ? mB_Enregistrement.demande.recu.petitionnaire.telephone2 : '--- Non renseigné ---'}"
+                                           style="color: #{mB_Global.couleurSiChampsNonRenseigne(mB_Enregistrement.telephone2)}" id="ol_tel2" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_tel3">Télephone 3</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.telephone3 != null ? mB_Enregistrement.demande.recu.petitionnaire.telephone3 : '--- Non renseigné ---'}"
+                                           style="color:  #{mB_Global.couleurSiChampsNonRenseigne(mB_Enregistrement.telephone3)}" id="ol_tel3" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_email">E-mail</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.email != null ? mB_Enregistrement.demande.recu.petitionnaire.email : '--- Non renseigné ---'}"
+                                           style="color: #{mB_Global.couleurSiChampsNonRenseigne(mB_Enregistrement.email)}" id="ol_email" />
+
+
+                            <p:outputLabel styleClass="libelle" for="gi_photo" style="vertical-align: central">Photo du bénéficiaire enregistrée</p:outputLabel>
+                            <p:graphicImage id="gi_photo"  value="#{mB_Enregistrement.demande.photo.cheminPhoto.substring(2)}" width="90" style="margin: 0 10px;" alt="photo_manquante" cache="false" />
+           
+                        </p:panelGrid>
+                        <br/>
+
+                        <h3 style="color: green;">Informations sur Parents du Pétitionnaire</h3>
+                        <p:panelGrid columns="2" styleClass="panelGrid" style="margin: auto;">   
+
+                            <p:outputLabel styleClass="libelle" for="ol_nomPere">Nom du Père</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.nomPere}" id="ol_nomPere" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_prenomPere">Prénoms du Père</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.prenomsPere}" id="ol_prenomPere" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_datNaisPere">Date de Naissance du Père</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.dateNaissancePere}" id="ol_datNaisPere" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </p:outputLabel>
+
+                            <p:outputLabel styleClass="libelle" for="ol_lieuNaisPere">Lieu de Naissance du Père</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.lieuNaissancePere}" id="ol_lieuNaisPere" />
+
+                            <p:outputLabel /> <br/> 
+
+                            <p:outputLabel styleClass="libelle" for="ol_nomMere">Nom de la Mère</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.nomMere}" id="ol_nomMere" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_prenomMere">Prénoms de la Mère</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.prenomsMere}" id="ol_prenomMere" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_datNaisMere">Date de Naissance de la Mère</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.dateNaissanceMere}" id="ol_datNaisMere" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </p:outputLabel>
+
+                            <p:outputLabel styleClass="libelle" for="ol_lieuNaisMere">Lieu de Naissance de la Mère</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Enregistrement.demande.recu.petitionnaire.lieuNaissanceMere}" id="ol_lieuNaisMere" />
+
+                        </p:panelGrid>
+
+                        <h3 style="color: green;">Documents du Pétitionnaire</h3>
+
+                        <p:panelGrid  columns="2" styleClass="panelGrid" style="margin: auto;">
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.docJustificatifNais == 1}" >Extrait de naissance</p:outputLabel>
+                            <h:panelGroup styleClass="output"  rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.docJustificatifNais == 1}">
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.docJustificatifNais == 1}" value="n°#{mB_Enregistrement.dfExt.numeroDocumentFourni} -- du " />
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.docJustificatifNais == 1}" value="#{mB_Enregistrement.dfExt.dateEtablissement}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.docJustificatifNais == 1}" value=" délivré le  " />
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.docJustificatifNais == 1}" value="#{mB_Enregistrement.dfExt.dateDelivrance}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.docJustificatifNais == 1}" value=" à #{mB_Enregistrement.dfExt.lieuDelivrance}"  />
+                            </h:panelGroup>
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.docJustificatifNais == 2}" >Jugement supplétif</p:outputLabel>
+                            <h:panelGroup styleClass="output"  rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.docJustificatifNais == 2}">
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.docJustificatifNais == 2}" value="n°#{mB_Enregistrement.dfJugSup.numeroDocumentFourni} -- du " />
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.docJustificatifNais == 2}" value="#{mB_Enregistrement.dfJugSup.dateEtablissement}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.docJustificatifNais == 2}" value=" délivré le  " />
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.docJustificatifNais == 2}" value="#{mB_Enregistrement.dfJugSup.dateDelivrance}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.docJustificatifNais == 2}" value=" à #{mB_Enregistrement.dfJugSup.lieuDelivrance}"  />
+                            </h:panelGroup>
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.recu.casDemande.numCasDemande == 1}" >Certificat de Nationalite</p:outputLabel>
+                            <h:panelGroup styleClass="output" rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.recu.casDemande.numCasDemande == 1}">
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1  and mB_Enregistrement.demande.recu.casDemande.numCasDemande == 1}" value="n°#{mB_Enregistrement.dfCertificatNat.numeroDocumentFourni} délivré le " />
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.recu.casDemande.numCasDemande == 1}" value="#{mB_Enregistrement.dfCertificatNat.dateDelivrance}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 1 and mB_Enregistrement.demande.recu.casDemande.numCasDemande == 1}" value=" à #{mB_Enregistrement.dfCertificatNat.lieuDelivrance}"  />
+                            </h:panelGroup>
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" >Passeport</p:outputLabel>
+                            <h:panelGroup styleClass="output" rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}">
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" value="n°#{mB_Enregistrement.dfPass.numeroDocumentFourni} délivré le " />
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" value="#{mB_Enregistrement.dfPass.dateDelivrance}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" value=" à #{mB_Enregistrement.dfPass.lieuDelivrance}" />
+                            </h:panelGroup>
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" >Visa</p:outputLabel>
+                            <h:panelGroup styleClass="output" rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}">
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" value="n°#{mB_Enregistrement.dfVisa.numeroDocumentFourni} délivré le  " />
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" value="#{mB_Enregistrement.dfVisa.dateDelivrance}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" value=" à #{mB_Enregistrement.dfVisa.lieuDelivrance}"  />
+                            </h:panelGroup>
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" for="ol_dateEntree">Date Cachet d'entrée en Côte d'ivoire</p:outputLabel>
+                            <p:outputLabel styleClass="output" rendered="#{mB_Enregistrement.demande.recu.typeDemande.numTypeDemande == 2}" value="#{mB_Enregistrement.dfCachetEntree.dateEntreePays}" id="ol_dateEntree">
+                                <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                            </p:outputLabel>
+
+                        </p:panelGrid>
+                        <br/>
+                        <h:commandButton rendered="#{mB_Enregistrement.evoluer.status.numStatus == 1}" value="Fixer le Rendez-vous" >
+                            <f:ajax event="click" listener="#{mB_Enregistrement.fixerRdvEtRendreDemandeDispoPourControle()}" render="@all" />
+                        </h:commandButton>
+
+                        <p:outputLabel rendered="#{mB_Enregistrement.demande.statusActuel.numStatus >= 2  }" 
+                                       value="Enregistrement terminé" style="color: #{mB_Global.couleurMessagePassageNiveauSuivant()};"/>
+
+                        <p:outputLabel rendered="#{mB_Enregistrement.demande.statusActuel.numStatus >= 2  }" 
+                                       value="(Rendez-vous fixé pour le: " style="color: #{mB_Global.couleurMessagePassageNiveauSuivant()};"/>
+
+                        <p:outputLabel rendered="#{mB_Enregistrement.demande.statusActuel.numStatus >= 2  }" value="#{mB_Enregistrement.rdv.dateRdv}" style="color: #{mB_Global.couleurMessagePassageNiveauSuivant()};" >
+                            <f:convertDateTime type="both" pattern="dd/MM/yyyy)"/>
+                        </p:outputLabel>
+                        <br/>
+                        <p:outputLabel rendered="#{mB_Enregistrement.demande.statusActuel.numStatus >= 2  }" value="Demande disponible pour Contrôle depuis le "
+                                       style="color: #{mB_Global.couleurMessagePassageNiveauSuivant()};" />
+
+                        <p:outputLabel rendered="#{mB_Enregistrement.demande.statusActuel.numStatus >=2  }" value="#{mB_Enregistrement.evoluerFinTraitement.dates}"
+                                       style="color: #{mB_Global.couleurMessagePassageNiveauSuivant()};" >
+                            <f:convertDateTime type="both" pattern="dd/MM/yyyy HH:mm:ss"/>
+                            <br/><br/>
+                        </p:outputLabel>
+                        
+                        
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourRechercheDemande()}" action="#{mB_Global.retournerARechercheDemande()}" >
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                        <br/><br/>
+
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Enregistrement.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentEnregistrementAi_role') or request.isUserInRole('agentEnregistrementTps_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Enregistrement.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

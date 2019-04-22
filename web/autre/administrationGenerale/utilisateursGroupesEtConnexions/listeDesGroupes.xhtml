@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>LISTES DES UTILISATEURS</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('administrateurGeneral_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div>
+                    <h:form styleClass="form">
+
+                        <h1><h:outputText value="Liste des Groupes (total = #{mB_Administration.listerGroupes().size()})"/></h1>
+                        <p:dataTable value="#{mB_Administration.listerGroupes()}" var="item" rendered="#{mB_Administration.listerGroupes().size() > 0}" 
+                                     style="                           
+                                     border: solid 4px darkgreen;
+                                     border-radius: 15px;
+                                     background-color: white;
+                                     margin: auto;
+                                     width: 700px; " 
+                                     >
+                            
+                            <p:column filterBy="#{item.nomGroupe}" sortBy="#{item.nomGroupe}">
+                                <f:facet name="header">
+                                    <h:outputText value="Nom Groupe"/>
+                                </f:facet>
+                                <h:outputText value="#{item.nomGroupe}"/>
+                            </p:column>
+                            
+                            <p:column filterBy="#{mB_Administration.nombreUtilisateursDansUnGroupes(item.numGroupe)}" sortBy="#{mB_Administration.nombreUtilisateursDansUnGroupes(item.numGroupe)}" width="150">
+                                <f:facet name="header">
+                                    <h:outputText value="Nombre Utilisateurs"/>
+                                </f:facet>
+                                <h:outputText value="#{mB_Administration.nombreUtilisateursDansUnGroupes(item.numGroupe)}"/>
+                            </p:column>
+                        </p:dataTable>
+
+                        <br/>
+                        <h:commandButton value="Retour à Administration Générale" id="cbRetourAdministrationGenerale" action="#{mB_Global.redirigerUrl('/autre/administrationGenerale/menuAdministrationGenerale.xhtml')}"><br/>
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                        <br/>
+                        
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Administration.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('administrateurGeneral_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Administration.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

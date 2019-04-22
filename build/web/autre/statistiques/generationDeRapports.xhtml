@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>STATISTIQUES (MENU)</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptPrimefacesLocales()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentStatistique_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 750px; padding: 30px;">
+                    <h:form styleClass="form" id="form">   
+
+                        <h:outputLabel value="GENERATION DE RAPPORTS" style="font-size: 30px;" />
+                        <br/>
+                        ---------------------------------------------------------------------------------------------------<br/>
+                        <h:outputLabel value="1) Selection de date(s)" style="font-size: 20px;" /><br/>
+                        <h:panelGroup id="pgpEntreeDate">
+                            <h:panelGrid columns="2" style="margin: auto;">
+                                <h:commandButton value="Entrer une Date" rendered="#{mB_Statistiques.datesPeriode == false}" styleClass="cbStatEntreeDate">
+                                    <f:ajax execute="@this" listener="#{mB_Statistiques.selectionDateSimple()}" render="pgpEntreeDate" />
+                                </h:commandButton>
+                                <h:panelGroup id="pgpDateSimple" rendered="#{mB_Statistiques.dateSimple}">
+                                    <p:calendar id="pcal_date" value="#{mB_Statistiques.date}" locale="fr" navigator="true" yearRange="#{mB_Global.intervalDateDuCalendrier(2014, 0)}" pattern="dd/MM/yyyy HH:mm/ss"
+                                                mindate="#{mB_Global.dateMinimalDuCalendrierPourStatistiques()}" maxdate="#{mB_Global.recupererDateActuelle()}" 
+                                                readonlyInput="true" />
+                                </h:panelGroup>
+
+                                <h:commandButton value="Entrer une Période" rendered="#{mB_Statistiques.dateSimple == false}" styleClass="cbStatEntreeDate">
+                                    <f:ajax execute="@this" listener="#{mB_Statistiques.selectionDatesPeriode()}" render="pgpEntreeDate" />
+                                </h:commandButton>
+                                <h:panelGroup id="pgpDatesPeriode" rendered="#{mB_Statistiques.datesPeriode}">
+                                    <p:calendar id="pcal_dateDebut" value="#{mB_Statistiques.dateDebut}" locale="fr" navigator="true" yearRange="#{mB_Global.intervalDateDuCalendrier(2014, 0)}" pattern="dd/MM/yyyy HH:mm/ss"
+                                                mindate="#{mB_Global.dateMinimalDuCalendrierPourStatistiques()}" maxdate="#{mB_Global.recupererDateActuelle()}" 
+                                                readonlyInput="true" >
+                                        <p:ajax event="dateSelect" update="pcal_dateFin" />
+                                    </p:calendar>
+
+                                    <p:outputLabel> au </p:outputLabel>
+                                    <p:calendar id="pcal_dateFin" value="#{mB_Statistiques.dateFin}" locale="fr" navigator="true" yearRange="#{mB_Global.intervalDateDuCalendrier(2014, 0)}" pattern="dd/MM/yyyy HH:mm/ss"
+                                                mindate="#{mB_Statistiques.dateMinimumPourDateFin()}" maxdate="#{mB_Global.recupererDateActuelle()}" 
+                                                readonlyInput="true" />
+                                </h:panelGroup>
+                            </h:panelGrid>
+                        </h:panelGroup>
+
+                        ---------------------------------------------------------------------------------------------------<br/>
+                        <p:growl id="message" showDetail="true" severity="fatal" />
+
+                        <h:outputLabel value="2) Traitement" style="font-size: 20px;" /><br/>
+                        <h:panelGrid style="margin: auto;">
+                            <h:commandButton value="Bilan périodique des ventes" action="#{mB_Statistiques.genererRapport2DatesEnPdfStream('rapBilanVentes')}" styleClass="cbStatChoixTraitement" />
+                            <h:commandButton value="Nombre de demandes présentes aux différents niveaux" action="#{mB_Statistiques.genererRapport1DateEnPdfStream('rapNombreDemandesAUnNiveau')}" styleClass="cbStatChoixTraitement" />
+                            <h:commandButton value="Progression détaillée de chaque Demande" action="#{mB_Statistiques.genererRapport1DateEnPdfStream('rapEvolutionDemandesAvecDates')}" styleClass="cbStatChoixTraitement" />
+                            <h:panelGroup>
+                                <h:commandButton value="Liste des demandes présentes au niveau ==>" action="#{mB_Statistiques.genererRapport1Date1NiveauEnPdfStream('rapDemandesAUnNiveau')}" styleClass="cbStatChoixTraitement" />
+                                <h:selectOneMenu value="#{mB_Statistiques.numStatus}" id="status"  styleClass="cbStatChoixTraitement" style="width: 200px; ">
+                                    <f:selectItem  itemLabel="-- Sélectionnez un niveau --" />
+                                    <f:selectItems value="#{mB_Statistiques.listeStatus()}" var="s"
+                                                   itemLabel="#{s.nomStatus}" itemValue="#{s.numStatus}" />
+                                </h:selectOneMenu>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                        <br/>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Statistiques.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+
+                    </h:form> 
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentStatistique_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Statistiques.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

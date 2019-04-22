@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"        
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>RECEPTION/CAISSE</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentComptable_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 700px;">
+
+                    <h:form styleClass="form" id="form">
+                        <p:outputLabel style="color: green;">ENREGISTREMENT D'UNE NOUVELLE PLAGE DE N°RECU</p:outputLabel>
+
+                        <h:panelGrid columns="2"  styleClass="panelGrid">
+
+                            <p:outputLabel styleClass="libelle" style="color: orange;"></p:outputLabel>
+                            <br/>
+
+                            <p:outputLabel styleClass="libelle" for="it_numeroDebutPlage">Plage commençant par le numéro</p:outputLabel>
+                            <p:inputText required="true" value="#{mB_AgenceComptable.numeroDebutPlage}"  id="it_numeroDebutPlage" />
+
+                            <p:outputLabel styleClass="libelle" for="it_numeroFinPlage">Plage terminant par le numéro</p:outputLabel>
+                            <p:inputText required="true" value="#{mB_AgenceComptable.numeroFinPlage}"  id="it_numeroFinPlage" />
+
+                            <p:outputLabel styleClass="libelle" for="som_centre">Centre</p:outputLabel>
+                            <h:selectOneMenu required="true" style="font-size: 16px;"  value="#{mB_AgenceComptable.numCentrePaiement}" id="som_centre">
+                                <f:selectItem itemLabel="Selectionner un Centre" />
+                                <f:selectItems value="#{mB_AgenceComptable.listeCentres()}" var="c"
+                                               itemLabel="#{c.nomCentre}" itemValue="#{c.numCentre}" />
+                            </h:selectOneMenu>                           
+
+                        </h:panelGrid>
+
+                        <br/>
+                        <p:growl id="message" showDetail="true" />
+                        <p:commandButton id="cb" value="Créer la plage de reçus" action="#{mB_AgenceComptable.creerNouvellePlageRecus()}" update="form">
+                            <p:confirm header="Confirmation" message="Confirmez-vous la création de la plage ?" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <div id="confirmDialog"> <ui:include src="/global/confirmDialog.xhtml" /> </div>
+
+                        <br/><br/>
+                        <h:commandButton value="Retour au Menu Plages de Reçus" action="#{mB_Global.redirigerUrl('menuPlagesRecus.xhtml')}" >
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                        <br/>
+                        <br/><br/>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Global.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!request.isUserInRole('agentComptable_role')}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_AgenceComptable.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>

@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>TITRE IDENTITE PRODUIT</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentDistributionAi_role') or request.isUserInRole('agentDistributionTps_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 700px;">
+                    <h:form styleClass="form">
+                        <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1}" style="color: green;">ATTESTATION D'IDENTITE résultant de la Demande n°#{mB_Distribution.demande.numDemande}</p:outputLabel>
+                        <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 2}" style="color: green;">TITRE PROVISOIRE DE SEJOUR résultant de la Demande n°#{mB_Distribution.demande.numDemande}</p:outputLabel>
+
+                        <h:panelGrid columns="2"  styleClass="panelGrid" style="margin:auto">
+
+                            <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1}" for="ot_numero">N°Attestation d'Identité</p:outputLabel>
+                            <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 2}" for="ot_numero">N°Titre Provisoire de Séjour</p:outputLabel>
+                            <p:outputLabel styleClass="outputLabel" value="#{mB_Distribution.titreIdentite.numeroTitreIdentite}"  id="ot_numero"></p:outputLabel>
+
+                            <p:outputLabel for="ot_dateEtab">Date d'établissement</p:outputLabel>
+                            <p:outputLabel styleClass="outputLabel" value="#{mB_Distribution.titreIdentite.dateEtablissementTitreIdentite}" id="ot_dateEtab">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </p:outputLabel>
+
+                            <p:outputLabel for="ot_dateExpiration">Date d'expiration</p:outputLabel>
+                            <p:outputLabel styleClass="outputLabel" value="#{mB_Distribution.titreIdentite.dateExpirationTitreIdentite}" id="ot_dateExpiration">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </p:outputLabel>
+
+                            <p:outputLabel rendered="#{mB_Distribution.demande.statusActuel.numStatus == 6}" for="ot_dateRetrait">Date de Retrait</p:outputLabel>
+                            <p:outputLabel rendered="#{mB_Distribution.demande.statusActuel.numStatus == 6}" styleClass="outputLabel" value="#{mB_Distribution.titreIdentite.dateRetraitTitreIdentite}" id="ot_dateRetrait">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </p:outputLabel>
+
+                        </h:panelGrid>
+
+                        <p:outputLabel rendered="#{mB_Distribution.demande.statusActuel.numStatus == 5}" value=" (en attente de Retrait depuis le " />
+                        <p:outputLabel rendered="#{mB_Distribution.demande.statusActuel.numStatus == 5}" value="#{mB_Distribution.demande.dateStatusActuel}">
+                            <f:convertDateTime type="both" pattern="dd/MM/yyyy HH:mm:ss"/>
+                        </p:outputLabel>
+                        <p:outputLabel rendered="#{mB_Distribution.demande.statusActuel.numStatus == 5}" value=")" />
+                        <br/>
+                        <h:commandButton rendered="#{mB_Distribution.demande.statusActuel.numStatus == 5}" value="Confirmer Retrait Titre" action="#{mB_Distribution.confirmerRetraitTitre()}" />
+                        <br/><br/>
+                        <h:commandButton value="Retour au Menu Distribution" action="#{mB_Global.redirigerUrl('menuDistribution.xhtml')}" >
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                        <br/>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Distribution.retournerAuMenuGeneral()}"><f:ajax execute="@this" /></h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentDistributionAi_role') or request.isUserInRole('agentDistributionTps_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Caisse.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

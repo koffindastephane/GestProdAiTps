@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>DEMANDES DISPONIBLES POUR ENREGISTREMENT</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentEnregistrementAi_role') or request.isUserInRole('agentEnregistrementTps_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 800px;">
+                    <h:form styleClass="form" id="form">
+                        <p:outputLabel rendered="#{mB_Enregistrement.numTypeDemande == 1}" style="color: green;">DEMANDE ATTESTATION D'IDENTITE (ENREGISTREMENT)</p:outputLabel>
+                        <p:outputLabel rendered="#{mB_Enregistrement.numTypeDemande == 2}" style="color: green;">DEMANDE TITRE PROVISOIRE DE SEJOUR (ENREGISTREMENT)</p:outputLabel>
+                        <br/>
+                        <p:dataTable value="#{mB_Enregistrement.listeDemandesDispoPourUnNiveau(1)}" var="d" rendered="#{mB_Enregistrement.listeDemandesDispoPourUnNiveau(1).size() > 0}"
+                                     styleClass="demandeDispoDatatable"
+                                     >
+
+                            <p:column filterBy="#{mB_Global.dateToString(d.dateStatusActuel)}" filterMatchMode="contains" sortBy="#{d.dateStatusActuel}">
+                                <f:facet name="header">
+                                    <p:outputLabel value="Date d'arrivée" styleClass="libelle"/>
+                                </f:facet>
+                                <p:outputLabel rendered="#{mB_Global.verifierSiDemandeEnCoursUtilisationParUnAutreUtilisateur(d.numDemande, d.recu.typeDemande.numTypeDemande) == false}"
+                                               value="#{d.dateStatusActuel}" styleClass="output">
+                                    <f:convertDateTime type="both" pattern="dd/MM/yyyy HH:mm:ss"/>
+                                </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Global.verifierSiDemandeEnCoursUtilisationParUnAutreUtilisateur(d.numDemande, d.recu.typeDemande.numTypeDemande) == true}"
+                                               value="#{d.dateStatusActuel}" styleClass="output" style="color: grey;">
+                                    <f:convertDateTime type="both" pattern="dd/MM/yyyy HH:mm:ss"/>
+                                </p:outputLabel>
+                            </p:column>
+
+                            <p:column filterBy="#{d.numDemande}" filterMatchMode="contains" sortBy="#{d.numDemande}">
+                                <f:facet name="header">
+                                    <p:outputLabel value="N°Demande" styleClass="libelle"/>
+                                </f:facet>
+                                <p:outputLabel rendered="#{mB_Global.verifierSiDemandeEnCoursUtilisationParUnAutreUtilisateur(d.numDemande, d.recu.typeDemande.numTypeDemande) == false}"
+                                               value="#{d.numDemande}" styleClass="output"/>
+                                <p:outputLabel rendered="#{mB_Global.verifierSiDemandeEnCoursUtilisationParUnAutreUtilisateur(d.numDemande, d.recu.typeDemande.numTypeDemande) == true}"
+                                               value="#{d.numDemande}" styleClass="output" style="color: grey;"/>
+                            </p:column>
+
+                            <p:column>
+                                <p:growl id="message1" showDetail="true" />
+                                <p:commandButton rendered="#{mB_Global.verifierSiDemandeEnCoursUtilisationParUnAutreUtilisateur(d.numDemande, d.recu.typeDemande.numTypeDemande) == false}"
+                                    value="Traiter cette Demande" action="#{mB_Enregistrement.rechercherDemande(d.numDemande)}" update="form" >
+                                    <p:confirm header="Confirmation" message="Voulez-vous traiter la demande N° : #{d.numDemande} ?" icon="ui-icon-alert" />
+                                </p:commandButton>
+
+                                <div id="confirmDialog"> <ui:include src="/global/confirmDialog.xhtml" /> </div>
+                                
+                                <p:outputLabel rendered="#{mB_Global.verifierSiDemandeEnCoursUtilisationParUnAutreUtilisateur(d.numDemande, d.recu.typeDemande.numTypeDemande) == true}"
+                                               value="(demande vérouillée)" styleClass="output" style="color: grey;"/>
+                            </p:column>
+
+                        </p:dataTable>
+                        <br/><br/>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourRechercheDemande()}" action="#{mB_Global.retournerARechercheDemande()}" />
+						<br/><br/>
+
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Enregistrement.retournerAuMenuGeneral()}"><f:ajax execute="@this" /></h:commandButton>
+
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentEnregistrementAi_role') or request.isUserInRole('agentEnregistrementTps_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Caisse.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

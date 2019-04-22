@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>RECUS DE LA PLAGE</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentComptable_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <h:form styleClass="form">                        
+                    <h1><h:outputText value="Reçus de la plage"/></h1>
+                    <p:dataTable value="#{mB_AgenceComptable.listeRecusDeLaPlage}" var="item" rendered="#{mB_AgenceComptable.listeRecusDeLaPlage.size() > 0}" 
+                                 style="                           
+                                 border: solid 4px darkgreen;
+                                 border-radius: 15px;
+                                 background-color: white;
+                                 width: 1000px;
+                                 margin: auto;" 
+                                 >   
+                        <p:column filterBy="#{item.numeroRecu}" filterMatchMode="contains" sortBy="#{item.numeroRecu}">
+                            <f:facet name="header">
+                                <h:outputText value="N°Recu"/>
+                            </f:facet>
+                            <h:outputText value="#{item.numeroRecu}"/>
+                        </p:column>
+                        <p:column filterBy="#{mB_Global.dateToString(item.dateVersement)}" filterMatchMode="contains" sortBy="#{item.dateVersement}">
+                            <f:facet name="header">
+                                <h:outputText value="Date Versement"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dateVersement}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                            <br/>
+                            <h:outputText value="#{item.dateVersement}">
+                                <f:convertDateTime pattern="HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column filterBy="#{item.montantPaye}" filterMatchMode="contains" sortBy="#{item.montantPaye}">
+                            <f:facet name="header">
+                                <h:outputText value="Montant"/>
+                            </f:facet>
+                            <h:outputText value="#{item.montantPaye}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.petitionnaire.nom} #{item.petitionnaire.prenoms}" filterMatchMode="contains" sortBy="#{item.petitionnaire.nom} #{item.petitionnaire.prenoms}">
+                            <f:facet name="header">
+                                <h:outputText value="Partie Versante"/>
+                            </f:facet>
+                            <h:outputText value="#{item.petitionnaire.nom}"/><br/>
+                            <h:outputText value="#{item.petitionnaire.prenoms}"/>
+                        </p:column>
+                        <p:column filterBy="#{item.typeDemande.nomTypeDemande}" filterMatchMode="contains" sortBy="#{item.typeDemande.nomTypeDemande}">
+                            <f:facet name="header">
+                                <h:outputText value="Nature Recette"/>
+                            </f:facet>
+                            <h:outputText value="#{item.typeDemande.nomTypeDemande}"/>
+                        </p:column>
+                    </p:dataTable>
+                    <br/><br/>
+                    <h:commandButton value="Retour aux Plages de reçus actives" id="cbRetourPlagesRecusActives" action="#{mB_Global.redirigerUrl('plagesRecusActives.xhtml')}">
+                        <f:ajax execute="@this" />
+                    </h:commandButton>
+                    <br/><br/>
+                    <h:commandButton value="Retour aux Plages de reçus" id="cbRetourPlagesRecus" action="#{mB_Global.redirigerUrl('menuPlagesRecus.xhtml')}">
+                        <f:ajax execute="@this" />
+                    </h:commandButton>
+                    <br/><br/>
+                    <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_AgenceComptable.retournerAuMenuGeneral()}">
+                        <f:ajax execute="@this" />
+                    </h:commandButton>
+
+                </h:form> 
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentComptable_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_AgenceComptable.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

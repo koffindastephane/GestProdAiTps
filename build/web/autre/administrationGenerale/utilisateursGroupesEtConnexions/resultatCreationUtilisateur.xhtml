@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>GESTION UTILISATEURS</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('administrateurGeneral_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 600px;">
+                    <h:form styleClass="form">
+                        <p:outputLabel rendered="#{mB_Administration.resultatCreationUtilisateur == 0}" style="color: green;">ECHEC DE CREATION D'UTILISATEUR</p:outputLabel>
+                        <p:outputLabel rendered="#{mB_Administration.resultatCreationUtilisateur == 1}" style="color: green;">CREATION D'UTILISATEUR REUSSIE</p:outputLabel>
+                        <p:outputLabel rendered="#{mB_Administration.resultatCreationUtilisateur == 2}" style="color: green;">MODIFICATION D'UTILISATEUR REUSSIE</p:outputLabel>
+                        <br/>
+                        <h3>UTILISATEUR</h3>
+                        <h:panelGrid rendered="#{mB_Administration.resultatCreationUtilisateur != 0}" columns="2" styleClass="panelGrid" style="margin:auto" >
+
+                            <p:outputLabel styleClass="libelle" for="ol_nom">Nom</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Administration.utilisateurCree.nomUtilisateur}" id="ol_nom"></p:outputLabel>
+
+                            <p:outputLabel styleClass="libelle" for="ol_prenom">Prénoms</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Administration.utilisateurCree.prenomUtilisateur}" id="ol_prenom"></p:outputLabel>
+
+                            <p:outputLabel styleClass="libelle" for="ol_login">Login</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Administration.utilisateurCree.login}" id="ol_login"></p:outputLabel>
+
+                            <p:outputLabel rendered="#{mB_Administration.utilisateurCree.emailUtilisateur != null}" styleClass="libelle" for="ol_email">E-mail</p:outputLabel>
+                            <p:outputLabel rendered="#{mB_Administration.utilisateurCree.emailUtilisateur != null}" styleClass="output" value="#{mB_Administration.utilisateurCree.emailUtilisateur}" id="ol_email"></p:outputLabel>
+                            
+                            <p:outputLabel rendered="#{mB_Administration.utilisateurCree.telephoneUtilisateur != null}" styleClass="libelle" for="ol_tel">Telephone</p:outputLabel>
+                            <p:outputLabel rendered="#{mB_Administration.utilisateurCree.telephoneUtilisateur != null}" styleClass="output" value="#{mB_Administration.utilisateurCree.emailUtilisateur}" id="ol_tel"></p:outputLabel>
+                            
+                            <p:outputLabel styleClass="libelle" for="ol_centreTravail">Centre de travail</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Administration.utilisateurCree.centreTravail.nomCentre}" id="ol_centreTravail"></p:outputLabel>
+                            
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Administration.resultatCreationUtilisateur == 1}" for="ol_dateCreation">Date Création</p:outputLabel>
+                            <p:outputLabel styleClass="output" rendered="#{mB_Administration.resultatCreationUtilisateur == 1}" value="#{mB_Administration.utilisateurCree.dateCreationUtilisateur}" id="ol_dateCreation">
+                                <f:convertDateTime type="both" pattern="dd/MM/yyyy HH:mm:ss"/>
+                            </p:outputLabel>
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Administration.resultatCreationUtilisateur == 2}" for="ol_dateModif">Date Modification</p:outputLabel>
+                            <p:outputLabel styleClass="output" rendered="#{mB_Administration.resultatCreationUtilisateur == 2}" value="#{mB_Administration.utilisateurCree.dateDerniereModificationUtilisateur}" id="ol_dateModif">
+                                <f:convertDateTime type="both" pattern="dd/MM/yyyy HH:mm:ss"/>
+                            </p:outputLabel>
+                            
+                            <p:outputLabel styleClass="libelle" for="ol_mailCreation">Mail de création</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_TraitementsEmails.messageSurEnvoiDuMail}" id="ol_mailCreation"></p:outputLabel>
+                            
+
+                        </h:panelGrid>
+
+                        <br/>
+                        <h:commandButton value="Retour à Administration Générale" id="cbRetourAdministrationGenerale" action="#{mB_Global.redirigerUrl('/autre/administrationGenerale/menuAdministrationGenerale.xhtml')}"><br/>
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                        <br/>
+                        
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Administration.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('administrateurGeneral_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Administration.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

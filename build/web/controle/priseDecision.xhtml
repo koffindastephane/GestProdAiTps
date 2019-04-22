@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>CONTROLE (PRISE DECISION)</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentControleAi_role') or request.isUserInRole('agentControleTps_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 700px;">
+                    <h:form styleClass="form" id="form">
+
+                        <p:growl id="message1" showDetail="true" />
+                        <p:commandButton rendered="#{mB_Controle.dossierValidable(2) == true and mB_Controle.demande.statusActuel.numStatus == 2}" value="Envoyer la demande à l'impression" action="#{mB_Controle.envoyerDemandeALImpression()}" update="form" >
+                            <p:confirm header="Confirmation" message="Confirmez-vous l'envoi de la demande à l'impression ?" icon="ui-icon-alert" />
+                            <br/>
+                        </p:commandButton>
+
+                        <div id="confirmDialog"> <ui:include src="/global/confirmDialog.xhtml" /> </div>
+
+                        <p:growl id="message2" showDetail="true" />
+                        <p:commandButton rendered="#{mB_Controle.demande.statusActuel.numStatus == 2}" value="Rejeter la demande" action="#{mB_Controle.afficherPageSaisieMotifRejet()}" update="form" >
+                            <p:confirm header="Confirmation" message="Confirmez-vous le rejet de la demande ?" icon="ui-icon-alert" />
+                            <br/>
+                        </p:commandButton>
+
+                        <div id="confirmDialog"> <ui:include src="/global/confirmDialog.xhtml" /> </div>
+
+
+                        <p:outputLabel rendered="#{mB_Controle.evaluerStatusDemande(3) }" value="Contrôle terminé => Demande envoyée à l'impression le " style="color: #{mB_Global.couleurMessagePassageNiveauSuivant()};" />
+                        <p:outputLabel rendered="#{mB_Controle.evaluerStatusDemande(3) }" value="#{mB_Controle.evoluerFinTraitement.dates}" style="color: #{mB_Global.couleurMessagePassageNiveauSuivant()};">
+                            <f:convertDateTime type="both" pattern="dd/MM/yyyy à HH:mm:ss"/>
+                            <br/>
+                        </p:outputLabel>
+
+                        <p:outputLabel rendered="#{mB_Controle.evaluerStatusDemande(4) }" value="Contrôle terminé => Demande rejetée le " style="color: #{mB_Global.couleurMessagePassageNiveauSuivant()};" />
+                        <p:outputLabel rendered="#{mB_Controle.evaluerStatusDemande(4) }" value="#{mB_Controle.evoluerFinTraitement.dates}" style="color: #{mB_Global.couleurMessagePassageNiveauSuivant()};">
+                            <f:convertDateTime type="both" pattern="dd/MM/yyyy à HH:mm:ss"/>
+                            <br/>
+                        </p:outputLabel>
+
+                        <p:outputLabel rendered="#{mB_Controle.evaluerStatusDemande(4)}" value="MOTIF : " style="color: #{mB_Global.couleurMessagePassageNiveauSuivant()};" />
+                        <p:outputLabel rendered="#{mB_Controle.evaluerStatusDemande(4) }" value="#{mB_Controle.demande.motifRejet}" style="color: #{mB_Global.couleurMessagePassageNiveauSuivant()};" >
+                            <br/><br/>
+                        </p:outputLabel>
+                        <br/>
+                        
+                        <h:commandButton rendered="#{mB_Controle.demande.statusActuel.numStatus == 2}" value="Retour aux documents fournis" action="#{mB_Global.redirigerUrl('controleDocumentsFournis.xhtml')}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton><br/><br/>
+
+                        <h:commandButton rendered="#{mB_Controle.demande.statusActuel.numStatus == 2}" value="Retour au Menu Contrôle" action="#{mB_Global.redirigerUrl('menuControle.xhtml')}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton><br/><br/>
+
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Controle.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentControleAi_role') or request.isUserInRole('agentControleTps_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Caisse.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

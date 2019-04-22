@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>DISTRIBUTION</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentDistributionAi_role') or request.isUserInRole('agentDistributionTps_role'))}" styleClass="body">
+        <f:view>
+            <div id="page_titre" >
+                <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper_titre" style="font-size: 14px;">
+
+                    <div style="margin-left: 250px;">
+
+                        <h:form >
+                            <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1}" >ATTESTATION D'IDENTITE résultant de la Demande n°#{mB_Distribution.demande.numDemande}</p:outputLabel>
+                            <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 2}" >TITRE PROVISOIRE DE SEJOUR résultant de la Demande n°#{mB_Distribution.demande.numDemande}</p:outputLabel>
+                            <p:outputLabel rendered="#{mB_Distribution.demande.statusActuel.numStatus == 5}" value=" (en attente de Retrait depuis le " />
+                            <p:outputLabel rendered="#{mB_Distribution.demande.statusActuel.numStatus == 5}" value="#{mB_Distribution.evoluer.dates}">
+                                <f:convertDateTime type="both" pattern="dd/MM/yyyy HH:mm:ss"/>
+                            </p:outputLabel>
+                            <p:outputLabel rendered="#{mB_Distribution.demande.statusActuel.numStatus == 5}" value=")" />
+
+
+                            <h:commandButton  rendered="#{mB_Distribution.demande.statusActuel.numStatus == 5}" value="Confirmer Retrait de la pièce" action="#{mB_Distribution.confirmerRetraitTitre()}"/>
+
+                            <p:outputLabel rendered="#{mB_Distribution.demande.statusActuel.numStatus == 6}" value=" (Retrait effectué le " />
+                            <p:outputLabel rendered="#{mB_Distribution.demande.statusActuel.numStatus == 6}" value="#{mB_Distribution.evoluerFinTraitement.dates}">
+                                <f:convertDateTime type="both" pattern="dd/MM/yyyy à HH:mm:ss"/>
+                            </p:outputLabel>
+                            <p:outputLabel rendered="#{mB_Distribution.demande.statusActuel.numStatus == 6}" value=")" />       
+                        </h:form>
+
+                        <div style="width: 800px; height: 553px; background-image: url('#{mB_Distribution.determinerCheminTitre()}'); background-repeat: no-repeat; padding-top: 150px; padding-left: 50px; " >
+
+                            <h:form>
+                                <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1}" style="font-weight: bold; font-size: 20px; margin-left:200px;"><span style="text-decoration: underline;">ATTESTATION D'IDENTITE</span></p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 2}" style="font-weight: bold; font-size: 20px;"><span style="text-decoration: underline;">TITRE PROVISOIRE DE SEJOUR</span>    N° #{mB_Distribution.titreIdentite.numeroTitreIdentite}</p:outputLabel>
+                                <br/><br/>
+                                <h:panelGrid columns="2" cellspacing="">
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1}" style="margin-right: 30px;" for="ol_numeroAttestation">N°</p:outputLabel>
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1}" styleClass="outputLabel_en_gras" value="#{mB_Distribution.titreIdentite.numeroTitreIdentite}" id="ol_numeroAttestation"></p:outputLabel>
+
+                                    <p:outputLabel style="margin-right: 30px;" for="ol_nom_et_prenoms">Nom et prénoms</p:outputLabel>
+                                    <p:outputLabel styleClass="outputLabel_en_gras" value="#{mB_Distribution.demande.recu.petitionnaire.nom} #{mB_Distribution.demande.recu.petitionnaire.prenoms}" id="ol_nom_et_prenoms"></p:outputLabel>
+
+                                    <p:outputLabel for="ol_datNais">Date de naissance</p:outputLabel>
+                                    <p:outputLabel styleClass="outputLabel_en_gras" value="#{mB_Distribution.demande.recu.petitionnaire.dateNaissance}" id="ol_datNais">
+                                        <f:convertDateTime type="both" pattern="dd/MM/yyyy"/>
+                                    </p:outputLabel>
+
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 2}" for="ol_sexe">Sexe</p:outputLabel>
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 2}" styleClass="outputLabel_en_gras" value="#{mB_Distribution.demande.recu.petitionnaire.sexe}" id="ol_sexe"></p:outputLabel>
+
+
+
+                                    <p:outputLabel for="ol_Pere">De</p:outputLabel>
+                                    <p:outputLabel styleClass="outputLabel_en_gras" value="#{mB_Distribution.demande.recu.petitionnaire.nomPere} #{mB_Distribution.demande.recu.petitionnaire.prenomsPere}" id="ol_Pere"></p:outputLabel>
+
+                                    <p:outputLabel for="ol_Mere">Et de</p:outputLabel>
+                                    <p:outputLabel styleClass="outputLabel_en_gras" value="#{mB_Distribution.demande.recu.petitionnaire.nomMere} #{mB_Distribution.demande.recu.petitionnaire.prenomsMere}" id="ol_Mere"></p:outputLabel>
+
+                                    <p:outputLabel for="ol_profession">Profession</p:outputLabel>
+                                    <p:outputLabel styleClass="outputLabel_en_gras" value="#{mB_Distribution.demande.recu.petitionnaire.profession}" id="ol_profession"></p:outputLabel>
+
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1}" for="ol_domicile">Domicile</p:outputLabel>
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1}" styleClass="outputLabel_en_gras" value="#{mB_Distribution.demande.recu.petitionnaire.domicile}"  id="ol_domicile"></p:outputLabel>
+
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 2}" for="ol_adressePostale">Adresse</p:outputLabel>
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 2}" styleClass="outputLabel_en_gras" value="#{mB_Distribution.demande.recu.petitionnaire.adressePostale}"  id="ol_adressePostale"></p:outputLabel>
+                                </h:panelGrid>
+
+                                <br/>
+
+                                <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1}">A justifié son état civil par la présentation des pièces suivantes: </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 2}">Pièces justificatives</p:outputLabel>
+                                <br/>
+
+                                <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.docJustificatifNais == 1}" >Extrait de naissance</p:outputLabel>
+                                <h:panelGroup styleClass="outputLabel_en_gras"  rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.docJustificatifNais == 1}">
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.docJustificatifNais == 1}" value="n°#{mB_Distribution.dfExt.numeroDocumentFourni} -- du " />
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.docJustificatifNais == 1}" value="#{mB_Distribution.dfExt.dateEtablissement}">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                    </p:outputLabel>
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.docJustificatifNais == 1}" value=" délivré le  " />
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.docJustificatifNais == 1}" value="#{mB_Distribution.dfExt.dateDelivrance}">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                    </p:outputLabel>
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.docJustificatifNais == 1}" value=" à #{mB_Distribution.dfExt.lieuDelivrance}"  />
+                                </h:panelGroup>
+
+                                <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.docJustificatifNais == 2}" >Jugement supplétif</p:outputLabel>
+                                <h:panelGroup styleClass="outputLabel_en_gras"  rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.docJustificatifNais == 2}">
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.docJustificatifNais == 2}" value="n°#{mB_Distribution.dfJugSup.numeroDocumentFourni} -- du " />
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.docJustificatifNais == 2}" value="#{mB_Distribution.dfJugSup.dateEtablissement}">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                    </p:outputLabel>
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.docJustificatifNais == 2}" value=" délivré le  " />
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.docJustificatifNais == 2}" value="#{mB_Distribution.dfJugSup.dateDelivrance}">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                    </p:outputLabel>
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.docJustificatifNais == 2}" value=" à #{mB_Distribution.dfJugSup.lieuDelivrance}"  />
+                                </h:panelGroup>
+                                <br/>
+                                <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.recu.casDemande.numCasDemande == 1}" >Certificat de Nationalite</p:outputLabel>
+                                <h:panelGroup styleClass="outputLabel_en_gras" rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.recu.casDemande.numCasDemande == 1}">
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1  and mB_Distribution.demande.recu.casDemande.numCasDemande == 1}" value="n°#{mB_Distribution.dfCertificatNat.numeroDocumentFourni} délivré le " />
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.recu.casDemande.numCasDemande == 1}" value="#{mB_Distribution.dfCertificatNat.dateDelivrance}">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                    </p:outputLabel>
+                                    <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 1 and mB_Distribution.demande.recu.casDemande.numCasDemande == 1}" value=" à #{mB_Distribution.dfCertificatNat.lieuDelivrance}"  />
+                                </h:panelGroup>
+
+
+                                <p:outputLabel rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 2}" value="Passeport  " style="margin-left: 42px;"  />
+                                <h:panelGroup rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 2}"  styleClass="outputLabel_en_gras">
+                                    <p:outputLabel value="N°#{mB_Distribution.dfPass.numeroDocumentFourni} DELIVRE LE " />
+                                    <p:outputLabel value="#{mB_Distribution.dfPass.dateDelivrance}">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                    </p:outputLabel>
+                                    <p:outputLabel value=" à #{mB_Distribution.dfPass.lieuDelivrance}" />
+                                </h:panelGroup>
+
+                                <h:panelGrid columns="2"  rendered="#{mB_Distribution.demande.recu.typeDemande.numTypeDemande == 2}" > 
+                                    <p:outputLabel for="ol_residence">Est bel et bien en résidence en</p:outputLabel>
+                                    <p:outputLabel styleClass="outputLabel_en_gras" value="CÔTE D'IVOIRE"  id="ol_residence"></p:outputLabel>
+
+                                    <p:outputLabel for="ol_dateEntreePays">Depuis le</p:outputLabel>
+                                    <p:outputLabel styleClass="outputLabel_en_gras" value="#{mB_Distribution.dfCachetEntree.dateEntreePays}"  id="ol_dateEntreePays">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                    </p:outputLabel>
+                                </h:panelGrid>
+                                <br/><br/>
+                                <h:panelGrid columns="2">
+                                    <p:outputLabel for="ol_dateExpiration" value="Ce document est valable jusqu'au" />
+                                    <p:outputLabel styleClass="outputLabel_en_gras"  value="#{mB_Distribution.titreIdentite.dateExpirationTitreIdentite}" id="ol_dateExpiration">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                    </p:outputLabel>               
+                                </h:panelGrid>
+                                <br/>
+                                <p:outputLabel for="ol_dateEtablissement" value="Fait à ABIDJAN, le " />
+                                <p:outputLabel styleClass="outputLabel_en_gras"  value="#{mB_Distribution.titreIdentite.dateEtablissementTitreIdentite}" id="ol_dateEtablissement">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                            </h:form>
+
+                        </div>
+                        <h:panelGroup>
+                            <div style="position: absolute; top: 290px; left: 895px; width: 80px; height: 100px;">
+                                <h:graphicImage value="#{mB_Distribution.demande.photo.cheminPhoto.substring(2)}" width="140" height="165" />
+                            </div>
+                        </h:panelGroup>
+
+                        <h:form>
+                            <h:commandButton value="Retour au Menu Distribution" action="#{mB_Global.redirigerUrl('menuDistribution.xhtml')}" >
+                                <f:ajax execute="@this" />
+                            </h:commandButton>
+                            <br/>
+                            <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Distribution.retournerAuMenuGeneral()}">
+                                <f:ajax execute="@this" />
+                            </h:commandButton>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentDistributionAi_role') or request.isUserInRole('agentDistributionTps_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Caisse.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>

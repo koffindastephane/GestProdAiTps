@@ -1,0 +1,64 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    
+            <p:menu overlay="true" trigger="aiTriggerButton" my="left top" at="left bottom" >
+                <p:submenu label="Traitement AI">
+                    <p:menuitem rendered="#{request.isUserInRole('agentCaisseAi_role')}" value="Caisse AI"  action="#{mB_Caisse.allerAEtape(0, 1)}" />
+                    <p:menuitem rendered="#{request.isUserInRole('agentEnregistrementAi_role')}" value="Enregistrement AI"  action="#{mB_Enregistrement.allerAEtape(1, 1)}" />
+                    <p:menuitem rendered="#{request.isUserInRole('agentControleAi_role')}" value="Contrôle AI"  action="#{mB_Controle.allerAEtape(2, 1)}" />
+                    <p:menuitem rendered="#{request.isUserInRole('agentImpressionAi_role')}" value="Impression AI"  action="#{mB_Impression.allerAEtape(3, 1)}" />
+                    <p:menuitem rendered="#{request.isUserInRole('agentDistributionAi_role')}" value="Distribution AI"  action="#{mB_Distribution.allerAEtape(5, 1)}" />
+                    
+                </p:submenu>
+            </p:menu>
+            <p:commandButton rendered="#{request.isUserInRole('agentCaisseAi_role') or request.isUserInRole('agentEnregistrementAi_role') or request.isUserInRole('agentControleAi_role') or request.isUserInRole('agentImpressionAi_role') or request.isUserInRole('agentDistributionAi_role')}"
+                             id="aiTriggerButton" value="ATTESTATION" />
+            
+            <p:menu overlay="true" trigger="tpsTriggerButton" my="left top" at="left bottom" >
+                <p:submenu label="Traitement TPS">
+                    <p:menuitem rendered="#{request.isUserInRole('agentCaisseTps_role')}" value="Caisse TPS"  action="#{mB_Caisse.allerAEtape(0, 2)}" />
+                    <p:menuitem rendered="#{request.isUserInRole('agentEnregistrementTps_role')}" value="Enregistrement TPS"  action="#{mB_Enregistrement.allerAEtape(1, 2)}" />
+                    <p:menuitem rendered="#{request.isUserInRole('agentControleTps_role')}" value="Contrôle TPS"  action="#{mB_Controle.allerAEtape(2, 2)}" />
+                    <p:menuitem rendered="#{request.isUserInRole('agentImpressionTps_role')}" value="Impression TPS"  action="#{mB_Impression.allerAEtape(3, 2)}" />
+                    <p:menuitem rendered="#{request.isUserInRole('agentDistributionTps_role')}" value="Distribution TPS"  action="#{mB_Distribution.allerAEtape(5, 2)}" />
+                    
+                </p:submenu>
+            </p:menu>
+            <p:commandButton rendered="#{request.isUserInRole('agentCaisseTps_role') or request.isUserInRole('agentEnregistrementTps_role') or request.isUserInRole('agentControleTps_role') or request.isUserInRole('agentImpressionTps_role') or request.isUserInRole('agentDistributionTps_role')}"
+                             id="tpsTriggerButton" value="TPS" />
+
+            
+            <p:menu overlay="true" trigger="agenceComptableTriggerButton" my="left top" at="left bottom">
+                <p:submenu rendered="#{request.isUserInRole('agentComptable_role')}" label="Gestion Caisse">
+                    <p:menuitem value="Tarifs en vigueur" action="#{mB_Global.redirigerUrl('/autre/agenceComptable/tarifsEnVigueur.xhtml')}" />
+                    <p:menuitem value="Plages de reçus" action="#{mB_Global.redirigerUrl('/autre/agenceComptable/menuPlagesRecus.xhtml')}" />
+                </p:submenu>                           
+            </p:menu>
+            <p:commandButton rendered="#{request.isUserInRole('agentComptable_role')}"
+                             id="agenceComptableTriggerButton" value="AGENCE COMPTABLE" />
+
+            <p:menu overlay="true" trigger="statistiquesTriggerButton" my="left top" at="left bottom">
+                <p:submenu rendered="#{request.isUserInRole('agentStatistique_role')}" label="Vues Statistiques">
+                    <p:menuitem value="Générer Rapports" action="#{mB_Global.redirigerUrl('/autre/statistiques/generationDeRapports.xhtml')}" />
+                    <p:menuitem value="Voir Demandes" action="#{mB_Global.redirigerUrl('/autre/statistiques/listeDesDemandes.xhtml')}" />
+                </p:submenu>                           
+            </p:menu>
+            <p:commandButton rendered="#{request.isUserInRole('agentStatistique_role')}"
+                             id="statistiquesTriggerButton" value="STATISTIQUES" />
+
+
+            <p:menu overlay="true" trigger="administrationTriggerButton" my="left top" at="left bottom">
+                <p:submenu rendered="#{request.isUserInRole('administrateurGeneral_role') or request.isUserInRole('administrateurDeCentre_role')}" label="Niveaux">
+                    <p:menuitem rendered="#{request.isUserInRole('administrateurGeneral_role')}" value="Niveau Général" action="#{mB_Global.redirigerUrl('/autre/administrationGenerale/menuAdministrationGenerale.xhtml')}" />
+                    <p:menuitem rendered="#{request.isUserInRole('administrateurDeCentre_role')}" value="Niveau Centre" action="#{mB_Global.redirigerUrl('/autre/administrationDeCentre/menuAdministrationDeCentre.xhtml')}" />
+                </p:submenu>                           
+            </p:menu>
+            <p:commandButton rendered="#{request.isUserInRole('administrateurGeneral_role')}"
+                             id="administrationTriggerButton" value="ADMINISTRATION" />
+
+</ui:composition>

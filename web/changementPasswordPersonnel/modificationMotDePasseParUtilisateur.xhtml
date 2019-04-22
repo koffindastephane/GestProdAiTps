@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"    
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>CREATION UTILISATEURS</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="true" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 580px; height: 550px;">
+                    <h:form id="form_utilEtRole">
+                        <h3 style="font-weight: bold; color:brown;">MODIFICATION DU MOT DE PASSE UTILISATEUR</h3>
+
+
+                        <h:panelGrid columns="2">
+                            <p:outputLabel styleClass="libelle" style="font-weight: bold; color: darkgreen;">Utilisateur</p:outputLabel><br/>
+
+                            <p:outputLabel styleClass="libelle" for="ol_login">Login</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Connexion.utilisateurConnecte.login}" id="ol_login" />
+                            
+                            <p:outputLabel styleClass="libelle" for="ol_nom">Nom</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Connexion.utilisateurConnecte.nomUtilisateur}" id="ol_nom" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_prenom">Prénoms</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Connexion.utilisateurConnecte.prenomUtilisateur}" id="ol_prenom" />
+
+                            <p:outputLabel rendered="#{mB_Connexion.utilisateurConnecte.emailUtilisateur != null}" styleClass="libelle" for="ol_email">E-mail</p:outputLabel>
+                            <p:outputLabel rendered="#{mB_Connexion.utilisateurConnecte.emailUtilisateur != null}" styleClass="output" value="#{mB_Connexion.utilisateurConnecte.emailUtilisateur}" id="ol_email" />
+                            
+                            <p:outputLabel rendered="#{mB_Connexion.utilisateurConnecte.telephoneUtilisateur != null}" styleClass="libelle" for="ol_tel">Telephone</p:outputLabel>
+                            <p:outputLabel rendered="#{mB_Connexion.utilisateurConnecte.telephoneUtilisateur != null}" styleClass="output" value="#{mB_Connexion.utilisateurConnecte.telephoneUtilisateur}" id="ol_tel" />
+                            
+                        </h:panelGrid>
+
+                        <br/>
+
+                        <h:panelGrid>                                
+                            <p:outputLabel styleClass="libelle" style="font-weight: bold; color: darkgreen;">Modification mot de passe</p:outputLabel>
+
+                            <p:password required="true" size ="40" id="ip_ancienPassword" value="#{mB_ChangementPasswordPersonnel.ancienPasswordUtilisateur}" placeholder="Entrez votre ancien mot de passe" />
+
+                            <p:password required="true" size ="40" id="ip_nouveauPassword" value="#{mB_ChangementPasswordPersonnel.nouveauPassword1Utilisateur}" placeholder="Entrez votre nouveau mot de passe" />
+
+                            <p:password required="true" size ="40" id="ip_nouveauPassword2" value="#{mB_ChangementPasswordPersonnel.nouveauPassword2Utilisateur}" placeholder="Confirmez votre nouveau mot de passe" />                                                     
+                        </h:panelGrid>  
+
+                        <br/>
+                        <p:growl id="message" showDetail="true" />
+                        <p:commandButton value="Valider la modification" action="#{mB_ChangementPasswordPersonnel.modifierPasswordUtilisateur()}" update="form_utilEtRole" >
+                            <p:confirm header="Confirmation" message="Confirmez-vous la modification de votre mot de passe" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <div id="confirmDialog"> <ui:include src="/global/confirmDialog.xhtml" /> </div>
+                        <br/>
+                        <h:commandButton rendered="#{(mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin() == false}" id="cb" value="Se deconnecter" action="#{mB_Global.fermerSession()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                        <h:commandButton rendered="#{(mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin() == true}" id="cbRetourMenuGen" value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" action="#{mB_ChangementPasswordPersonnel.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>                     
+
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="false" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_ChangementPasswordPersonnel.retournerAccueil()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

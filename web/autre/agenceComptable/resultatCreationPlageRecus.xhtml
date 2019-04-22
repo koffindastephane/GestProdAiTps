@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>CREATION PLAGE DE RECUS</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentComptable_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 750px;">
+                    <h:form styleClass="form" style="font-size: 30px;">
+                        <p:outputLabel rendered="#{mB_AgenceComptable.numeroDebutPlage > 0 and mB_AgenceComptable.numeroFinPlage > 0 and mB_AgenceComptable.numeroDebutPlage le mB_AgenceComptable.numeroFinPlage}" style="color: brown;">Création Réussie de la Plage Reçus de #{mB_AgenceComptable.plageRecus.numeroDebutPlageRecus} à #{mB_AgenceComptable.plageRecus.numeroFinPlageRecus}<br/></p:outputLabel>
+
+                        <p:outputLabel rendered="#{mB_AgenceComptable.numeroDebutPlage > 0 and mB_AgenceComptable.numeroFinPlage > 0 and mB_AgenceComptable.numeroDebutPlage le mB_AgenceComptable.numeroFinPlage}" style="color: brown;">pour le Centre: #{mB_AgenceComptable.plageRecus.centrePaiement.nomCentre}</p:outputLabel>
+                        <p:outputLabel rendered="#{!(mB_AgenceComptable.numeroDebutPlage > 0 and mB_AgenceComptable.numeroFinPlage > 0 and mB_AgenceComptable.numeroDebutPlage le mB_AgenceComptable.numeroFinPlage)}" style="color: brown;">Echec de Création de la Plage Reçus de #{mB_AgenceComptable.numeroDebutPlage} à #{mB_AgenceComptable.numeroFinPlage}</p:outputLabel><br/>
+                        <p:outputLabel rendered="#{!(mB_AgenceComptable.numeroDebutPlage > 0 and mB_AgenceComptable.numeroFinPlage > 0 and mB_AgenceComptable.numeroDebutPlage le mB_AgenceComptable.numeroFinPlage)}" style="color: brown;">Incohérence n°Debut/n°Fin de Plage</p:outputLabel>
+                        <br/>
+                        <h:commandButton value="Retour à Création de Plage de Reçus" action="#{mB_AgenceComptable.retournerACreationPlageNumerosRecus()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                        <br/>
+                        <h:commandButton value="Retour au Menu Plages de Reçus" action="#{mB_Global.redirigerUrl('menuPlagesRecus.xhtml')}" /><br/>
+                        <br/>                        
+                        <h:commandButton value="Retour au Menu Général" action="#{mB_AgenceComptable.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton> 
+
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!request.isUserInRole('agentComptable_role')}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_AgenceComptable.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>

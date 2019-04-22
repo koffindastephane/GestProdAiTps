@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rapDemandesAUnNiveau" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9544d52a-9a55-43ca-a29f-45d8e1fd9908">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="niveau" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dateAsString" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[call procDemandesAUnNiveauAUneDate($P{niveau}, $P{dateAsString});]]>
+	</queryString>
+	<field name="typeDemande" class="java.lang.String"/>
+	<field name="centre" class="java.lang.String"/>
+	<field name="demande" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="status" class="java.lang.String"/>
+	<field name="dates" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<group name="gp_typeDemande">
+		<groupExpression><![CDATA[$F{typeDemande}]]></groupExpression>
+		<groupHeader>
+			<band height="59">
+				<textField>
+					<reportElement x="36" y="15" width="177" height="31" uuid="a2a4eda0-acfb-481a-85ac-eba613d7d5d5"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{typeDemande}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="4" width="555" height="1" uuid="c4ae9829-2d5e-4201-a497-6237ef4961e5"/>
+				</line>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="gp_centre">
+		<groupExpression><![CDATA[$F{centre}]]></groupExpression>
+		<groupHeader>
+			<band height="42">
+				<staticText>
+					<reportElement x="106" y="22" width="226" height="20" uuid="f9306ff1-39c5-4642-855e-d144bc3cf839"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Demandes]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="332" y="22" width="204" height="20" uuid="0bd33626-7bd4-48bc-9b23-f227190f73ea"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Dates]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="68" y="0" width="100" height="20" uuid="0bf383a7-f70a-4b0b-81f9-d3f84f3fc2a7"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{centre}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="91" splitType="Stretch">
+			<staticText>
+				<reportElement x="75" y="13" width="372" height="25" uuid="57b6f559-75d0-46a7-8ec5-0fe521c3bd28"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEMANDES POUR LESQUELLES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="193" y="66" width="17" height="20" uuid="552bdf19-45ae-4779-9d4c-029201579103"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[au]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm:ss">
+				<reportElement x="213" y="66" width="107" height="20" uuid="23ae8f06-c8d1-447d-a314-95f63bbaa824"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="75" y="38" width="372" height="20" uuid="8b900f54-be8d-469e-b01f-82bc3370e928"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="106" y="0" width="226" height="20" uuid="529f8129-ec06-4a19-a156-ead36ec39916"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{demande}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH.mm.ss">
+				<reportElement x="332" y="0" width="204" height="20" uuid="28a4f57b-8767-46cf-b57c-22c350a17be2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{dates}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

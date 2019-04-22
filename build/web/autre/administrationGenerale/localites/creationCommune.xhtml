@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"    
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>CREATION DE COMMUNE</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('administrateurGeneral_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 700px;">
+                    <h:form styleClass="form" id="form">
+                        <h1 style="font-weight: bold; color:brown;">CREATION DE COMMUNE</h1>
+
+                        <h:panelGrid columns="2" style="margin: auto; text-align: left;">        
+                            <p:outputLabel styleClass="libelle" for="it_numCommune">N° de la commune</p:outputLabel>
+                            <p:inputText id="it_numCommune" value="#{mB_Administration.numCommuneCreee}" maxlength="4" size="2"/>
+
+                            <p:outputLabel styleClass="libelle" for="it_nomCommune">Nom de la commune</p:outputLabel>
+                            <p:inputText id="it_nomCommune" value="#{mB_Administration.nomCommuneCreee}" size="40" />
+
+                            <p:outputLabel styleClass="libelle" for="som_numSousPrefecture">Sous-préfecture</p:outputLabel>
+                            <h:selectOneMenu style="font-size: 16px;"  value="#{mB_Administration.numSousPrefectureCreee}" id="som_numSousPrefecture">
+
+                                <f:selectItem itemLabel="Selectionner une sous-préfecture" />
+                                <f:selectItems value="#{mB_Administration.listerSousPrefectures()}" var="c"
+                                               itemLabel="#{c.nomSousPrefecture}" itemValue="#{c.numSousPrefecture}" />
+                            </h:selectOneMenu> 
+                        </h:panelGrid>
+                        <br/><br/> 
+                            <p:growl id="message" showDetail="true" />
+                            <p:commandButton value="Créer la commune" action="#{mB_Administration.creerCommune(mB_Administration.numSousPrefectureCreee)}" update="form" >
+                                <p:confirm header="Confirmation" message="Confirmez-vous la création de la commune ?" icon="ui-icon-alert" />
+                            </p:commandButton>
+
+                            <div id="confirmDialog"> <ui:include src="/global/confirmDialog.xhtml" /> </div>
+                            <br/><br/>
+                            <h:commandButton id="cbRetourMenuGen" value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" action="#{mB_Administration.retournerAuMenuGeneral()}">
+                                <f:ajax execute="@this" />
+                            </h:commandButton>                       
+
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('administrateurGeneral_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Administration.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

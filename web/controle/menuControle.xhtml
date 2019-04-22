@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>CONTROLE (MENU)</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentControleAi_role') or request.isUserInRole('agentControleTps_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 350px; padding: 30px;">
+                    <h:form styleClass="form">
+
+                        <h:outputLabel value="#{mB_Controle.typeDemande.nomTypeDemande}" style="font-size: 30px; color: green;" /><br/><br/>
+
+                        <h:outputLabel value="Menu #{mB_Controle.status.nomStatus}" style="font-size: 30px;" /><br/><br/>
+
+                        <h:panelGrid style="margin:auto;">
+                            <h:commandButton value="Consultation des Infos Demande" action="#{mB_Global.redirigerUrl('infosDemande.xhtml')}" styleClass="cbMenuControle"/>
+
+                            <h:commandButton value="Contrôle des Documents fournis" action="#{mB_Controle.afficherDocFournis()}" styleClass="cbMenuControle"/>
+
+                            <h:commandButton value="Prise de Décision" action="#{mB_Global.redirigerUrl('priseDecision.xhtml')}" styleClass="cbMenuControle"/>
+                        </h:panelGrid>
+                        <br/>
+                        
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourRechercheDemande()}" action="#{mB_Global.retournerARechercheDemande()}" /><br/><br/>
+                        
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Controle.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentControleAi_role') or request.isUserInRole('agentControleTps_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Caisse.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

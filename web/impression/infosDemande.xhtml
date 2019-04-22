@@ -1,0 +1,236 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>IMPRESSION</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentImpressionAi_role') or request.isUserInRole('agentImpressionTps_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+
+                    <h:form styleClass="form"  enctype="multipart/form-data">
+                        <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1}" style="color: green;">DEMANDE ATTESTATION D'IDENTITE (IMPRESSION)</p:outputLabel>
+                        <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2}" style="color: green;">DEMANDE TITRE PROVISOIRE DE SEJOUR (IMPRESSION)</p:outputLabel>
+                        <br/>
+                        <p:panelGrid columns="2" styleClass="panelGrid" style="margin:auto" >
+
+                            <p:outputLabel styleClass="libelle" for="ol_casDemande">Cas de demande</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.casDemande.nomCasDemande}" id="ol_casDemande" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_recu">N°Reçu</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.numeroRecu}" id="ol_recu" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_datPaiement">Date de Paiement</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.dateVersement}" id="ol_datPaiement">
+                                <f:convertDateTime type="both" pattern="dd/MM/yyyy HH:mm:ss"/>
+                            </p:outputLabel>
+
+                            <p:outputLabel styleClass="libelle" for="ol_montantPaye">Montant payé</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.montantPaye} FCFA" id="ol_montantPaye" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_nom">Nom</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.nom}" id="ol_nom" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_prenoms">Prénoms</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.prenoms}" id="ol_prenoms" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_datNais">Date de naissance</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.dateNaissance}" id="ol_datNais">
+                                <f:convertDateTime type="both" pattern="dd/MM/yyyy"/>
+                            </p:outputLabel>                       
+
+                            <p:outputLabel styleClass="libelle" for="ol_numDem" style="color: blue;">N°Demande</p:outputLabel>
+                            <p:outputLabel styleClass="output" style="color: blue;" value="#{mB_Impression.demande.numDemande}" id="ol_numDem" />
+
+
+                        </p:panelGrid>
+                        <br/>
+
+                        <h3 style="color: green;">Informations sur Pétitionnaire</h3>
+                        <p:panelGrid columns="2"  styleClass="panelGrid" style="margin: auto;">
+
+                            <p:outputLabel styleClass="libelle" for="ol_lieuNais">Lieu de naissance</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.lieuNaissance}"  id="ol_lieuNais" />
+
+
+                            <p:outputLabel styleClass="libelle" for="ol_sexe">Sexe</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.sexe}" id="ol_sexe" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_taille">Taille</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.taille} cm"  id="ol_taille" />
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2}" for="ol_nationalite">Nationalité</p:outputLabel>
+                            <p:inputText rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2}" styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.nationalite}" id="ol_nationalite" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_domicile">Domicile</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.domicile}" id="ol_domicile" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_profession">Profession</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.profession}" id="ol_profession" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_adressePhysique">Adresse Physique</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.adressePhysique}"  id="ol_adressePhysique" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_adressePostale">Boîte Postale</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.adressePostale}"  id="ol_adressePostale" />
+
+
+                            <p:outputLabel styleClass="libelle" for="ol_tel1">Télephone 1</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.telephone1}" id="ol_tel1" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_tel2">Télephone 2</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.telephone2}" id="ol_tel2" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_tel3">Télephone 3</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.telephone3}" id="ol_tel3" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_email">E-mail</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.email}" id="ol_email" />
+
+
+                            <p:outputLabel styleClass="libelle" for="gi_photo" style="vertical-align: central">Photo du bénéficiaire enregistrée</p:outputLabel>
+                            <h:graphicImage id="gi_photo"  value="#{mB_Impression.demande.photo.cheminPhoto.substring(2)}" width="90" style="margin: 0 10px;" alt="photo_manquante" />
+
+                        </p:panelGrid>
+                        <br/>
+
+                        <h3 style="color: green;">Informations sur Parents du Pétitionnaire</h3>
+                        <p:panelGrid columns="2" styleClass="panelGrid" style="margin: auto;">   
+
+                            <p:outputLabel styleClass="libelle" for="ol_nomPere">Nom du Père</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.nomPere}" id="ol_nomPere" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_prenomPere">Prénoms du Père</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.prenomsPere}" id="ol_prenomPere" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_datNaisPere">Date de Naissance du Père</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.dateNaissancePere}" id="ol_datNaisPere" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </p:outputLabel>
+
+                            <p:outputLabel styleClass="libelle" for="ol_lieuNaisPere">Lieu de Naissance du Père</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.lieuNaissancePere}"  id="ol_lieuNaisPere" />
+
+                            <p:outputLabel /> <br/> 
+
+                            <p:outputLabel styleClass="libelle" for="ol_nomMere">Nom de la Mère</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.nomMere}" id="ol_nomMere" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_prenomMere">Prénoms de la Mère</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.prenomsMere}" id="ol_prenomMere" />
+
+                            <p:outputLabel styleClass="libelle" for="ol_datNaisMere">Date de Naissance de la Mère</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.dateNaissanceMere}" id="ol_datNaisMere" >
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </p:outputLabel>
+
+                            <p:outputLabel styleClass="libelle" for="ol_lieuNaisMere">Lieu de Naissance de la Mère</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.demande.recu.petitionnaire.lieuNaissanceMere}"  id="ol_lieuNaisMere" />
+
+                        </p:panelGrid>
+                        <br/>
+                        <h3 style="color: green;">Documents du Pétitionnaire</h3>
+
+                        <p:panelGrid  columns="2" styleClass="panelGrid" style="margin: auto;">
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.docJustificatifNais == 1}" >Extrait de naissance</p:outputLabel>
+                            <h:panelGroup styleClass="output"  rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.docJustificatifNais == 1}">
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.docJustificatifNais == 1}" value="n°#{mB_Impression.dfExt.numeroDocumentFourni} -- du " />
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.docJustificatifNais == 1}" value="#{mB_Impression.dfExt.dateEtablissement}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.docJustificatifNais == 1}" value=" délivré le  " />
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.docJustificatifNais == 1}" value="#{mB_Impression.dfExt.dateDelivrance}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.docJustificatifNais == 1}" value=" à #{mB_Impression.dfExt.lieuDelivrance}"  />
+                            </h:panelGroup>
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.docJustificatifNais == 2}" >Jugement supplétif</p:outputLabel>
+                            <h:panelGroup styleClass="output"  rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.docJustificatifNais == 2}">
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.docJustificatifNais == 2}" value="n°#{mB_Impression.dfJugSup.numeroDocumentFourni} -- du " />
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.docJustificatifNais == 2}" value="#{mB_Impression.dfJugSup.dateEtablissement}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.docJustificatifNais == 2}" value=" délivré le  " />
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.docJustificatifNais == 2}" value="#{mB_Impression.dfJugSup.dateDelivrance}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.docJustificatifNais == 2}" value=" à #{mB_Impression.dfJugSup.lieuDelivrance}"  />
+                            </h:panelGroup>
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.recu.casDemande.numCasDemande == 1}" >Certificat de Nationalite</p:outputLabel>
+                            <h:panelGroup styleClass="output" rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.recu.casDemande.numCasDemande == 1}">
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1  and mB_Impression.demande.recu.casDemande.numCasDemande == 1}" value="n°#{mB_Impression.dfCertificatNat.numeroDocumentFourni} délivré le " />
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.recu.casDemande.numCasDemande == 1}" value="#{mB_Impression.dfCertificatNat.dateDelivrance}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.demande.recu.casDemande.numCasDemande == 1}" value=" à #{mB_Impression.dfCertificatNat.lieuDelivrance}"  />
+                            </h:panelGroup>
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2}" >Passeport</p:outputLabel>
+                            <h:panelGroup styleClass="output" rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2}">
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2}" value="n°#{mB_Impression.dfPass.numeroDocumentFourni} délivré le " />
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2}" value="#{mB_Impression.dfPass.dateDelivrance}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2}" value=" à #{mB_Impression.dfPass.lieuDelivrance}" />
+                            </h:panelGroup>
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2}" >Visa</p:outputLabel>
+                            <h:panelGroup styleClass="output" rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2}">
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2}" value="n°#{mB_Impression.dfVisa.numeroDocumentFourni} délivré le  " />
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2}" value="#{mB_Impression.dfVisa.dateDelivrance}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                                </p:outputLabel>
+                                <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2}" value=" à #{mB_Impression.dfVisa.lieuDelivrance}"  />
+                            </h:panelGroup>
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2}" for="ol_dateEntree">Date Cachet d'entrée en Côte d'ivoire</p:outputLabel>
+                            <p:outputLabel styleClass="output" rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2}" value="#{mB_Impression.dfCachetEntree.dateEntreePays}" id="ol_dateEntree">
+                                <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+                            </p:outputLabel>
+
+                        </p:panelGrid>
+                        <br/>
+                        <h3 style="color: green;">Retrait Prévisionnel</h3>
+                        <p:panelGrid columns="2" styleClass="panelGrid" style="margin:auto">
+                            <p:outputLabel styleClass="libelle" for="ol_dateRdv"  style="color: blue;">Date de Rendez-vous</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Impression.rdv.dateRdv}"  id="ol_dateRdv" style="color: blue;">
+                                <f:convertDateTime type="both" pattern="dd/MM/yyyy"/>
+                            </p:outputLabel>
+                        </p:panelGrid>
+                        <br/>
+                        <h:commandButton value="Retour au Menu Impression" action="#{mB_Global.redirigerUrl('menuImpression.xhtml')}" /><br/><br/>
+
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Impression.retournerAuMenuGeneral()}"><f:ajax execute="@this" /></h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentImpressionAi_role') or request.isUserInRole('agentImpressionTps_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Caisse.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

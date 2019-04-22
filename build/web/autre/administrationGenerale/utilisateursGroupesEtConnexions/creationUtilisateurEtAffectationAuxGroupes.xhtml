@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"    
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>CREATION UTILISATEURS</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('administrateurGeneral_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width:920px">
+                    <h:form styleClass="form_utilEtRole" id="form_utilEtRole">
+                        <h2 style="font-weight: bold; color:brown;">CREATION UTILISATEUR ET AFFECTATION AUX GROUPES</h2>
+
+                        <table> 
+                            
+                            <tr>
+                                <td>
+                        <h:panelGrid columns="2" styleClass="panelGrid">
+                            <p:outputLabel styleClass="libelle" style="font-weight: bold; color: darkgreen;">Centre de travail</p:outputLabel>
+                            <br/>
+
+                            <p:outputLabel for="som_numCentre">Centre</p:outputLabel>
+                            <h:selectOneMenu required="true" style="font-size: 16px;"  value="#{mB_Administration.numCentreTravail}" id="som_numCentre">
+
+                                <f:selectItem itemLabel="-- Sélectionnez un centre --" />
+                                <f:selectItems value="#{mB_Administration.listeCentres()}" var="c"
+                                                itemLabel="#{c.nomCentre}" itemValue="#{c.numCentre}" />
+                            </h:selectOneMenu> 
+                        </h:panelGrid>                      
+                        <br/>
+
+                        <h:panelGrid>
+                            <p:outputLabel styleClass="libelle" style="font-weight: bold; color: darkgreen;">Utilisateur</p:outputLabel>
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="2" styleClass="panelGrid">
+                            <p:outputLabel for="it_nom">Nom</p:outputLabel>
+                            <p:inputText required="true" styleClass="inputMaj" size ="30" id="it_nom" value="#{mB_Administration.nomUtilisateurCree}" />
+
+                            <p:outputLabel for="it_prenom">Prénoms</p:outputLabel>
+                            <p:inputText required="true" styleClass="inputMaj" size ="30" id="it_prenom" value="#{mB_Administration.prenomUtilisateurCree}" />
+
+                            <p:outputLabel for="sor_sexe">Sexe</p:outputLabel>
+                            <h:selectOneRadio required="true" value="#{mB_Administration.sexeUtilisateurCreeString}" id="sor_sexe">
+                                <f:selectItem itemValue="1" itemLabel="Masculin" />
+                                <f:selectItem itemValue="2" itemLabel="Feminin" />	   			
+                            </h:selectOneRadio>
+
+                            <p:outputLabel for="it_login">Login</p:outputLabel>
+                            <p:inputText required="true" size ="30" id="it_login" value="#{mB_Administration.loginUtilisateurCree}" />
+
+                            <p:outputLabel for="it_password1">Mot de passe</p:outputLabel>
+                            <p:password required="true" size ="30" id="it_password1" value="#{mB_Administration.password1UtilisateurCree}" />
+
+                            <p:outputLabel for="it_password2">Confirmer mot de passe</p:outputLabel>
+                            <p:password required="true" size ="30" id="it_password2" value="#{mB_Administration.password2UtilisateurCree}" />
+
+                            <p:outputLabel for="it_email">E-mail</p:outputLabel>
+                            <p:inputText size ="30" id="it_email" value="#{mB_Administration.emailUtilisateurCree}" />
+
+                            <p:outputLabel for="it_tel">Télephone</p:outputLabel>
+                            <p:inputText size ="30" id="it_tel" value="#{mB_Administration.telephoneUtilisateurCree}" />
+
+                        </h:panelGrid> 
+                        
+                        <br/>
+                        <p:growl id="message" showDetail="true" />
+                        
+                        <p:commandButton value="Créer l'utilisateur" action="#{mB_Administration.creerOuModifierUtilisateurEtAffecterAuxGroupesParAdminGeneral()}" />
+                        
+                        <p:commandButton style="display: none" 
+                                         widgetVar="btnCreerUtilisateur"  
+                                         actionListener="#{mB_Administration.modifierUtilisateur(mB_Administration.centreTravail, 'resultatCreationUtilisateur.xhtml')}" >
+                            <p:confirm header="Confirmation" message="Un utilisateur ayant pour login '#{mB_Administration.loginUtilisateurCree}' existe déjà. Confirmez-vous sa modification ?" /> 
+                        </p:commandButton>
+
+                        <div id="confirmDialog"> <ui:include src="/global/confirmDialog.xhtml" /> </div>
+                        <br/><br/>
+                        <h:commandButton value="Retour à Administration Générale" id="cbRetourAdministrationGenerale" action="#{mB_Global.redirigerUrl('/autre/administrationGenerale/menuAdministrationGenerale.xhtml')}"><br/>
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                        <br/>
+                        <h:commandButton id="cbRetourMenuGen" value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" action="#{mB_Administration.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton> 
+                        
+                                </td>
+                                <td>
+                        
+                         <h:panelGrid columns="2" style="border: 3px solid; border-radius: 10px; font-weight: bold; margin-left: 100px;">
+                            <p:outputLabel style="font-weight: bold; color: darkgreen; margin-left: 50px;">GROUPES</p:outputLabel> <br/>
+                            <h:selectManyCheckbox style="font-size: 16px;" layout="pagedirection" value="#{mB_Administration.numsGroupes}" id="smc_gu">
+
+                                <f:selectItems value="#{mB_Administration.listerGroupes()}" var="gu"
+                                               itemLabel="#{gu.nomGroupe}" itemValue="#{gu.numGroupe}" />
+                            </h:selectManyCheckbox>                 
+
+                        </h:panelGrid>
+                        
+                                </td>
+                            </tr>
+                        </table> 
+
+                                              
+
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('administrateurGeneral_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Administration.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

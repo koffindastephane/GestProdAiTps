@@ -1,0 +1,187 @@
+input .upload {
+    display: none;
+}
+
+.ui-outputlabel .ui-outputlabel-rfi {
+    color: red;
+}
+
+.pgBoutonsMenu .ui-button {
+    width: 195px;
+    height: 60px;
+    font-size: 15px;
+    background-color: darkorange;
+    color: green;
+}
+
+
+.cbMenus {
+    width: 300px;
+    height: 50px;
+}
+
+.cbMenusEmails {
+    width: 450px;
+    height: 50px;
+}
+
+
+.cbMenuCaisse {
+    width: 300px;
+    height: 50px;
+}
+
+.cbMenuEnregistrement {
+    width: 300px;
+    height: 50px;
+}
+
+.cbMenuControle {
+    width: 300px;
+    height: 50px;
+}
+
+.cbMenuImpression {
+    width: 300px;
+    height: 50px;
+}
+
+.cbMenuDistribution {
+    width: 300px;
+    height: 50px;
+}
+
+
+.cbStatEntreeDate {
+    width: 130px;
+    height: 30px;
+}
+
+.cbStatChoixTraitement {
+    width: 400px;
+    height: 40px;
+}
+
+
+
+.inputMaj {
+    text-transform: uppercase
+}
+
+.libelle {
+    margin: 0 30px;
+    font-weight: normal;
+}
+
+.output {
+    margin: 0 20px;
+    font-weight: bold;
+
+}
+
+.panelGrid {
+    text-align: left;
+}
+
+
+.body {
+    background-color: white;
+}
+
+#wrapper {    
+    margin: 0 auto;
+    padding: 10px;
+    alignment-adjust: central; 
+
+    border: solid 4px darkgreen;
+    border-radius: 15px;
+    background-color: white;
+
+    font-size: 20px;
+}
+
+.form {
+    width: auto;
+    height: auto;
+    margin: auto;
+    font-size: 20px;
+    text-align: center;
+}    
+
+
+.form_utilEtRole {
+    width: 900px;
+   /* height: 550px; */
+    margin: 0 auto; 
+    font-size: 20px;
+
+
+}
+
+.form_saisieNumDem {
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    font-size: 18px;
+
+}
+
+.outputLabel_en_gras {
+    font-weight: bold;
+}
+
+.form_acceuil {
+    width: 800px;
+    height: auto;
+    margin: auto;
+    color: green;
+    font-size: 25px;
+    text-align:center;
+
+}
+
+#user_and_ip {
+    width: 100%;
+    height: 45px;
+}
+
+#appareilPhoto {
+
+    margin: 0 auto;
+    alignment-adjust: central; 
+
+    border: solid 10px orange;
+    border-radius: 15px;
+    background-color: wheat;
+
+    font-size: 20px;
+}
+
+.operationEffectueePar {
+    color: darkcyan;
+}
+
+
+.ui-menuitem-text{
+    color:green;
+} 
+
+
+
+.cbMenu.ui-button-text-only .ui-button-text {
+    width: 300px;
+}
+
+#user_and_ip {
+    width: 100%;
+    height: 55px;
+}
+
+.demandeDispoDatatable {
+    background-color: wheat;
+    margin: auto;
+}
+
+
+
+

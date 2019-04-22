@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>CONTROLE (DOCUMENTS FOURNIS)</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentControleAi_role') or request.isUserInRole('agentControleTps_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="border-color: orange; " >
+                    <h:form styleClass="form" enctype="multipart/form-data" style="margin: auto;" id="form">
+                        <p><strong>DOCUMENTS FOURNIS</strong> PAR LE PETITIONNAIRE (#{mB_Controle.demande.recu.petitionnaire.nom} #{mB_Controle.demande.recu.petitionnaire.prenoms})<br/>
+                            POUR LA DEMANDE n°#{mB_Controle.demande.numDemande}</p>
+
+                        <p:outputLabel rendered="#{mB_Controle.listeDocumentsFournis().size() == 0}" style="color: red"> Aucun document n'a été fourni</p:outputLabel>
+
+                        <p:dataTable id="dt" value="#{mB_Controle.listeDocumentsFournis()}" var="df" rendered="#{mB_Controle.listeDocumentsFournis().size() > 0}" 
+                                     style="                           
+                                     border: solid 4px darkgreen;
+                                     border-radius: 15px;
+                                     background-color: white;
+                                     width: 1000px;
+                                     margin: auto;"
+
+                                     >
+
+                            <p:column style="width: 100px;">
+                                <f:facet name="header">
+                                    <h:outputLabel value="Document Fourni"/>
+                                </f:facet>
+                                <h:outputLabel value="#{df.typeDocument.nomTypeDocument}"/>
+                            </p:column>
+
+                            <p:column style="width: 300px;"> 
+
+                                <f:facet name="header">
+                                    <h:outputLabel value="Scan du document"/>
+                                </f:facet>
+
+                                <h:panelGroup id="pgp_ok1">
+                                    <h:panelGroup rendered="#{df.typeDocument.numTypeDocument != 8}">
+
+                                        <h:inputFile rendered="#{mB_Controle.verifierExistenceScanDoc(df) == false}" id="if_photoPart" value="#{mB_Controle.photoPart}" >
+                                            <f:ajax execute="@this" listener="#{mB_Controle.ajouterPhotoDocument(df)}" render="pgp_ok1" />
+                                        </h:inputFile>
+
+                                        <h:commandButton rendered="#{mB_Controle.verifierExistenceScanDoc(df)}" id="cbSelectionnerAutreFichier" value="Selectionner un autre fichier" >
+                                            <f:ajax execute="@this" listener="#{mB_Controle.boutonSelectionnerAutreFichier(df)}" render="pgp_ok1"/>
+                                        </h:commandButton>   
+
+                                        <p:graphicImage rendered="#{mB_Controle.verifierExistenceScanDoc(df)}" value="#{df.photo.cheminPhoto.substring(2)}" width="250" alt="photo_manquante" cache="false" />
+
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </p:column>
+
+                            <p:column style="width: 200px;">
+                                <f:facet name="header">
+                                    <h:outputLabel value="Etat de conformité"/>
+                                </f:facet>
+                                <h:panelGroup id="pgp_etatConformite">
+                                    <h:outputLabel value="Etat actuel : "/>                                
+                                    <h:outputLabel id="ot_nomEtat" value="#{df.etat.nomEtat}" style="color: green" />
+
+                                    <h:commandButton rendered="#{!((mB_Controle.selectedDocFourniPourEtat.numDocumentFourni == df.numDocumentFourni) and (mB_Controle.affichageBoutonsRadio == true)) and (df.typeDocument.numTypeDocument != 8)}" value="Mettre à jour" >
+                                        <f:ajax execute="@this" listener="#{mB_Controle.passerParametres(df)}" render="pgp_etatConformite" />
+                                    </h:commandButton>
+
+                                    <h:selectOneRadio rendered="#{(mB_Controle.selectedDocFourniPourEtat.numDocumentFourni == df.numDocumentFourni) and (mB_Controle.affichageBoutonsRadio == true)}" layout="pagedirection" value="#{mB_Controle.numEtatSelectedDocFourni}">
+                                        <f:selectItems var="etat" value="#{mB_Controle.listerEtats()}"
+                                                       itemValue="#{etat.numEtat}" itemLabel="#{etat.nomEtat}"/>
+                                    </h:selectOneRadio>
+
+                                    <h:commandButton rendered="#{(mB_Controle.selectedDocFourniPourEtat.numDocumentFourni == df.numDocumentFourni) and (mB_Controle.affichageBoutonsRadio == true)}" value="Valider mise à jour">
+                                        <f:ajax execute="@form" listener="#{mB_Controle.validerMiseAJourEtat()}" render="pgp_etatConformite" />
+                                    </h:commandButton>
+
+                                </h:panelGroup>
+
+                            </p:column>
+
+                            <p:column>
+
+                                <h:commandButton value="Infos Document" action="#{mB_Controle.afficherInfosDoc(df)}">
+                                    <f:ajax execute="@this" />
+                                </h:commandButton><br/>
+                            </p:column>
+
+
+                            <p:column  style="width: 100px;">
+                                <h:commandButton rendered="#{!(mB_Controle.docFourniNonSupprimable(df))}"                        
+                                                 value="Supprimer" action="#{mB_Controle.supprimerUnDocFourni(df)}"                                      
+                                                 onclick="if (!confirm('Voulez-vous vraiment supprimer le document : #{df.typeDocument.nomTypeDocument} ?'))
+                                                             return false" />
+                            </p:column>
+
+                        </p:dataTable>
+                        <br/>
+                    </h:form>
+
+                    <h:form styleClass="form" 
+                            rendered="#{mB_Controle.affichageSelectionDocsFournis}"  >
+                        <h:panelGrid columns="2" style="width: 700px; border: 4px solid; margin: auto; text-align: left;">
+
+                            <p:outputLabel>Choisir les documents fournis à ajouter</p:outputLabel> <br/>
+                            <h:selectManyCheckbox layout="pagedirection"  value="#{mB_Controle.numsDocumentNecessaires}" id="documentNecessaires">
+                                <f:selectItems value="#{mB_Controle.listeAutresDocumentNecessaires()}" var="dn"
+                                               itemLabel="#{dn.typeDocument.nomTypeDocument}" itemValue="#{dn.numDocumentNecessaire}" />
+                            </h:selectManyCheckbox>
+                            <br/>
+                            <h:commandButton value="Valider l'ajout" action="#{mB_Controle.ajouterDocumentsFournis()}" /><br/>
+                            <h:commandButton value="Annuler l'ajout" action="#{mB_Controle.nonAffichageSelectionDocsFournis()}" />
+                        </h:panelGrid>
+                    </h:form>
+                    <h:form styleClass="form" style="margin: auto;">
+                        <h:panelGrid style="margin: 0 auto;">
+                            <h:commandButton rendered="#{!mB_Controle.affichageSelectionDocsFournis}" value="Ajouter un ou des documents fournis" action="#{mB_Controle.affichageSelectionDocsFournis()}" styleClass="cbMenuControle"/>
+                            <h:commandButton rendered="#{!mB_Controle.affichageSelectionDocsFournis}" value="Prendre une décision concernant la Demande" action="#{mB_Global.redirigerUrl('priseDecision.xhtml')}" styleClass="cbMenuControle"/>
+                        </h:panelGrid>
+                        <br/>
+                        <h:commandButton rendered="#{!mB_Controle.affichageSelectionDocsFournis}" value="Retour au Menu Contrôle" action="#{mB_Global.redirigerUrl('menuControle.xhtml')}" >
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                        <br/><br/>
+                        <h:commandButton rendered="#{!mB_Controle.affichageSelectionDocsFournis}" value="Retour au Menu Général" action="#{mB_Controle.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentControleAi_role') or request.isUserInRole('agentControleTps_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Controle.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

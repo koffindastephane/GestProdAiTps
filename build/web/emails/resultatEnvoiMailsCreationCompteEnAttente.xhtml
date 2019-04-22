@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>GESTION DES MAILS EN ATTENTE</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin() and request.isUserInRole('administrateurGeneral_role')}" styleClass="body">
+        <f:view>
+            <div id="user_and_ip"> 
+                <ui:include src="/global/userAndIp.xhtml" />
+            </div>
+            <div id="deconnexion" style="float: right; width: 100%;">
+                <ui:include src="/global/deconnexion.xhtml" />
+            </div>
+            <div style="clear: both" />
+
+            <br/><br/>
+            <div id="wrapper" style="width: 700px;">
+                <h:form styleClass="form">
+                    <p:outputLabel style="color: green;">ENVOI DES MAILS EN ATTENTE</p:outputLabel><br/>
+                    
+                    <h:panelGrid columns="2" styleClass="panelGrid" style="margin:auto" >
+                        <p:outputLabel styleClass="output" rendered="#{mB_TraitementsEmails.nbMailsAEnvoyerFinal == 0 and mB_TraitementsEmails.nbMailsFinalementEnvoyes == 1}" value="Le mail en attente a ete envoye avec succes" id="ol_succesEnvoi" />
+                        <p:outputLabel styleClass="output" rendered="#{mB_TraitementsEmails.nbMailsAEnvoyerFinal == 0 and mB_TraitementsEmails.nbMailsFinalementEnvoyes != 1}" value="Les #{mB_TraitementsEmails.nbMailsFinalementEnvoyes} mails en attente ont ete envoyes avec succes" id="ol_succesEnvoi_" />
+
+                        <p:outputLabel styleClass="output" rendered="#{mB_TraitementsEmails.nbMailsAEnvoyerFinal gt 0}" value="Erreur survenue lors de l'envoi des mails en attente " id="ol_erreurEnvoi" />
+                        <p:outputLabel styleClass="output" rendered="#{mB_TraitementsEmails.nbMailsAEnvoyerFinal gt 0}" value="(envoi = #{mB_TraitementsEmails.nbMailsFinalementEnvoyes} / #{mB_TraitementsEmails.nbMailsAEnvoyerInitial})" id="ol_erreurEnvoi_" style="color: darkorange" />
+                    </h:panelGrid>
+                    <br/>
+                    <h:commandButton value="Consulter le bilan des mails" action="#{mB_TraitementsEmails.consulterBilanMails()}" styleClass="cbMenus"/>
+                    <br/><br/>
+                    <h:commandButton id="cbRetourMenuAdmin" value="#{mB_Administration.libelleBoutonRetourAuMenuAdminGeneral()}" action="#{mB_Administration.retournerMenuAdminGeneral()}">
+                        <f:ajax execute="@this" />
+                    </h:commandButton>
+
+                    <br/><br/>
+                    <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Administration.retournerAuMenuGeneral()}">
+                        <f:ajax execute="@this" />
+                    </h:commandButton>  
+
+                </h:form>
+
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin() and request.isUserInRole('administrateurGeneral_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Administration.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

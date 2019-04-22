@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>IMPRESSION (DOCUMENTS FOURNIS)</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentImpressionAi_role') or request.isUserInRole('agentImpressionTps_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="border-color: orange; " >
+                    <h:form styleClass="form" enctype="multipart/form-data" style="margin: auto;" >
+                        <p><strong>DOCUMENTS FOURNIS</strong> PAR LE PETITIONNAIRE (#{mB_Impression.demande.recu.petitionnaire.nom} #{mB_Impression.demande.recu.petitionnaire.prenoms})<br/>
+                            POUR LA DEMANDE n°#{mB_Impression.demande.numDemande}</p>
+
+                        <p:outputLabel rendered="#{mB_Impression.listeDocumentsFournis().size() == 0}" style="color: red"> Aucun document n'a été fourni</p:outputLabel>
+
+
+                        <p:dataTable value="#{mB_Impression.listeDocumentsFournis()}" var="df" rendered="#{mB_Impression.listeDocumentsFournis().size() > 0}" 
+                                     style="                           
+                                     border: solid 4px darkgreen;
+                                     border-radius: 15px;
+                                     background-color: white;
+                                     width: 1000px;
+                                     margin: auto;" 
+
+                                     >
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputLabel value="Document(s) Fourni(s)"/>
+                                </f:facet>
+                                <h:outputLabel value="#{df.typeDocument.nomTypeDocument}"/>
+                            </p:column>
+
+                            <p:column style="width: 300px;"> 
+                                <h:panelGroup rendered="#{df.typeDocument.numTypeDocument != 8}">
+                                    <f:facet name="header">
+                                        <h:outputLabel value="Photo_doc"/>
+                                    </f:facet>
+
+                                    <h:graphicImage  value="#{df.photo.cheminPhoto.substring(2)}" width="250" alt="photo_manquante" />
+                                </h:panelGroup>
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputLabel value="Etat validité"/>
+                                </f:facet>
+                                <h:outputLabel value="Etat actuel : "/>
+                                <h:outputLabel value="#{df.etat.nomEtat}" style="color: green" />
+                            </p:column>
+
+                            <p:column>
+                                <h:commandButton value="Infos Document" action="#{mB_Impression.afficherInfosDoc(df)}"/><br/>
+                            </p:column>
+
+                        </p:dataTable><br/>
+
+                        <h:commandButton value="Retour au Menu Impression" action="#{mB_Global.redirigerUrl('menuImpression.xhtml')}"/><br/><br/>
+                        <h:commandButton value="Retour au Menu Général" action="#{mB_Impression.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentImpressionAi_role') or request.isUserInRole('agentImpressionTps_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Caisse.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

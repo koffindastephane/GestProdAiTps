@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"          
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>CONTROLE</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+    <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+	</h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentControleAi_role') or request.isUserInRole('agentControleTps_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 550px;">
+                    <h:form styleClass="form" rendered="#{mB_Controle.affichageSaisieInfosDocFourni}"  >
+                        <p:outputLabel>SAISIR INFOS #{mB_Controle.documentFourni.typeDocument.nomTypeDocument}</p:outputLabel>
+
+                        <h:panelGrid rendered="#{mB_Controle.documentFourni.typeDocument.numTypeDocument != 8 and mB_Controle.documentFourni.typeDocument.numTypeDocument != 14}" columns="2" >
+                            <p:outputLabel for="it_numeroDoc">N°</p:outputLabel>
+                            <p:inputText required="true" styleClass="inputText" value="#{mB_Controle.numeroDoc}" id="it_numeroDoc" />
+
+                            <p:outputLabel rendered="#{mB_Controle.documentFourni.typeDocument.numTypeDocument == 1}" for="it_dateDoc">Datant du</p:outputLabel>
+                            <p:inputText rendered="#{mB_Controle.documentFourni.typeDocument.numTypeDocument == 1}" styleClass="inputText" value="#{mB_Controle.dateEtablissementDoc}" id="it_dateDoc">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </p:inputText>
+
+                            <p:outputLabel for="it_dateDelivranceDoc">Date de délivrance</p:outputLabel>
+                            <p:inputText styleClass="inputText" value="#{mB_Controle.dateDelivranceDoc}" id="it_dateDelivranceDoc">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </p:inputText>
+
+                            <p:outputLabel for="it_lieuDelivranceDoc">Lieu de délivrance</p:outputLabel>
+                            <p:inputText  required="true" styleClass="inputText" value="#{mB_Controle.lieuDelivranceDoc}"  id="it_lieuDelivranceDoc" />
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="2" rendered="#{mB_Controle.documentFourni.typeDocument.numTypeDocument == 14}" >
+                            <p:outputLabel for="it_dateEntreePays">Date d'entrée en Côte d'ivoire</p:outputLabel>
+                            <p:inputText styleClass="inputText" value="#{mB_Controle.dateEntreePays}" id="it_dateEntreePays">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </p:inputText>
+                        </h:panelGrid>
+
+                        <h:commandButton value="Valider modification" action="#{mB_Controle.ajouterInfosDocument()}" /><br/>
+                    </h:form>
+
+                    <h:form  styleClass="form" rendered="#{!(mB_Controle.affichageSaisieInfosDocFourni)}"  >
+                        <p:outputLabel style="color: brown; font-weight: bold;">#{mB_Controle.documentFourni.typeDocument.nomTypeDocument}</p:outputLabel>
+                        
+                        <h:panelGrid rendered="#{mB_Controle.documentFourni.typeDocument.numTypeDocument != 8 and mB_Controle.documentFourni.typeDocument.numTypeDocument != 14}" columns="2" >
+                            <p:outputLabel styleClass="libelle" for="ol_numeroDoc">N°</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Controle.documentFourni.numeroDocumentFourni}" id="ol_numeroDoc" />
+
+                            <p:outputLabel styleClass="libelle" rendered="#{mB_Controle.documentFourni.typeDocument.numTypeDocument == 1}" for="ol_dateDoc">Datant du</p:outputLabel>
+                            <p:outputLabel styleClass="output" rendered="#{mB_Controle.documentFourni.typeDocument.numTypeDocument == 1}" value="#{mB_Controle.documentFourni.dateEtablissement}" id="ol_dateDoc">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </p:outputLabel>
+
+                            <p:outputLabel styleClass="libelle" for="ol_dateDelivranceDoc">Date de délivrance</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Controle.documentFourni.dateDelivrance}" id="ol_dateDelivranceDoc">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </p:outputLabel>
+
+                            <p:outputLabel styleClass="libelle"  for="ol_lieuDelivranceDoc">Lieu de délivrance</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Controle.documentFourni.lieuDelivrance}"  id="ol_lieuDelivranceDoc" />
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="2" rendered="#{mB_Controle.documentFourni.typeDocument.numTypeDocument == 14}" >
+                            <p:outputLabel styleClass="libelle" for="ol_dateEntreePays">Date d'entrée en Côte d'ivoire</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Controle.documentFourni.dateEntreePays}" id="ol_dateEntreePays">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </p:outputLabel>
+                        </h:panelGrid>
+                        
+                        <h:panelGrid columns="2" rendered="#{mB_Controle.documentFourni.typeDocument.numTypeDocument == 8}" style="text-align: left;" >
+                            <p:outputLabel styleClass="libelle" for="ol_numeroRecu">N°</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Controle.demande.recu.numeroRecu}" id="ol_numeroRecu" />
+                            
+                            <p:outputLabel styleClass="libelle" for="ol_dateVersement">Date de paiement</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Controle.demande.recu.dateVersement}" id="ol_dateVersement">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            </p:outputLabel>
+                            
+                            <p:outputLabel styleClass="libelle" for="ol_mtPaye">Montant payé</p:outputLabel>
+                            <p:outputLabel styleClass="output" value="#{mB_Controle.demande.recu.montantPaye} FCFA" id="ol_mtPaye" />
+                        </h:panelGrid>                        
+                        
+                        <h:commandButton rendered="#{mB_Controle.documentFourni.typeDocument.numTypeDocument != 8 and mB_Controle.evoluer.status.numStatus == 2 and (request.isUserInRole('administrateurGeneral_role') or request.isUserInRole('administrateurDeCentre_role'))}')}" value="Modifier" action="#{mB_Controle.affichageSaisieInfosDocFourni()}" />
+                    </h:form>
+                    <br/>
+                    <h:form styleClass="form">            
+                        <h:commandButton value="Retour aux documents fournis" action="#{mB_Controle.afficherDocFournis()}" /><br/>
+                    </h:form> 
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentControleAi_role') or request.isUserInRole('agentControleTps_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Caisse.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+

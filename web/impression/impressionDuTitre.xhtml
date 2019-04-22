@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>IMPRESSION</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentImpressionAi_role') or request.isUserInRole('agentImpressionTps_role'))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px; padding-bottom: 20px;">
+                    <h:form styleClass="form">
+                        <h:panelGroup id="pgp_editionTitre">
+                            <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 1 and mB_Impression.titreEstEdite == false and mB_Impression.demande.statusActuel.numStatus == 3}" for="it_numeroFinalTitre">Entrer le N° de l'Attesttion d'Identité</p:outputLabel>
+                            <p:outputLabel rendered="#{mB_Impression.demande.recu.typeDemande.numTypeDemande == 2 and mB_Impression.titreEstEdite == false and mB_Impression.demande.statusActuel.numStatus == 3}" for="it_numeroFinalTitre">Entrer le N° du Titre Provisoire de Séjour</p:outputLabel>
+                            <p:inputText required="true" rendered="#{mB_Impression.titreEstEdite == false and mB_Impression.demande.statusActuel.numStatus == 3}" value="#{mB_Impression.numeroFinalDuTitreProduit}" id="it_numeroFinalTitre" pt:autofocus="true" />
+
+                            <h:commandButton rendered="#{mB_Impression.titreEstEdite == false and mB_Impression.demande.statusActuel.numStatus == 3}"
+                                             value="Editer #{mB_Impression.demande.recu.typeDemande.nomTypeDemande}" action="#{mB_Impression.editerTitre()}" >
+                                <f:ajax execute="pgp_editionTitre" render="@form" />
+                            </h:commandButton>
+                        </h:panelGroup>
+                        <br/><br/>
+
+                        <p:outputLabel rendered="#{mB_Impression.titreEstEdite == true and mB_Impression.demande.statusActuel.numStatus == 3}" 
+                                       value="Edition #{mB_Impression.demande.recu.typeDemande.nomTypeDemande} terminée ("
+                                       style="color: #{mB_Global.couleurMessagePassageNiveauSuivant()};" />
+
+                        <h:commandButton rendered="#{mB_Impression.titreEstEdite == true and mB_Impression.demande.statusActuel.numStatus == 3}" 
+                                         value="aperçu" action="#{mB_Impression.editerTitreIdentiteEnPdfStream()}" />
+
+                        <p:outputLabel rendered="#{mB_Impression.titreEstEdite == true and mB_Impression.demande.statusActuel.numStatus == 3}" 
+                                       value=")"
+                                       style="color: #{mB_Global.couleurMessagePassageNiveauSuivant()};" />
+                        <br/>
+
+                        <h:commandButton rendered="#{mB_Impression.titreEstEdite == true and mB_Impression.demande.statusActuel.numStatus == 3}" value="Générer #{mB_Impression.demande.recu.typeDemande.nomTypeDemande}" action="#{mB_Impression.genererTitre()}" />
+                        <p:outputLabel rendered="#{mB_Impression.titreEstEdite == true and mB_Impression.demande.statusActuel.numStatus == 3}"> ou </p:outputLabel> 
+                        <h:commandButton id="cbAnnuler" rendered="#{mB_Impression.titreEstEdite == true and mB_Impression.demande.statusActuel.numStatus == 3}" value="Annuler titre édité" action="#{mB_Impression.annulerTitreEdite()}" >
+                            <f:ajax execute="@this" render="@form" />
+                        </h:commandButton>
+
+                        <p:outputLabel rendered="#{mB_Impression.demande.statusActuel.numStatus >= 5}" value="Génération terminée => #{mB_Impression.demande.recu.typeDemande.nomTypeDemande} disponible à la Distribution depuis le " style="color: darkorange; font-weight: bold;" /> 
+                        <p:outputLabel rendered="#{mB_Impression.demande.statusActuel.numStatus >= 5}" value="#{mB_Impression.evoluerFinTraitement.dates}" style="color: #{mB_Global.couleurMessagePassageNiveauSuivant()}; font-weight: bold;">
+                            <f:convertDateTime type="both" pattern="dd/MM/yyyy à HH:mm:ss"/>
+                        </p:outputLabel>
+                        <br/>
+                        <p:outputLabel rendered="#{mB_Impression.demande.statusActuel.numStatus >= 5}" 
+                                       value="#{mB_Impression.resultatEnvoiMail()}"
+                                       style="color: #{mB_Global.couleurMessagePassageNiveauSuivant()}; font-weight: bold;">
+                            <br/>
+                        </p:outputLabel>
+
+                        <br/>
+                        <h:commandButton value="Retour au Menu Impression" action="#{mB_Global.redirigerUrl('menuImpression.xhtml')}" >
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                        <br/><br/>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Impression.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentImpressionAi_role') or request.isUserInRole('agentImpressionTps_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Impression.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+
+

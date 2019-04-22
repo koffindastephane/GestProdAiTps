@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <h:head>
+        <title>ENREGISTREMENT: Etape 2 (Prise photo)</title>
+        <h:outputStylesheet library="default" name="#{mB_Global.scriptCss()}" />
+        <h:outputScript library="default" name="#{mB_Global.scriptJavascript()}" />
+    </h:head>
+    <h:body rendered="#{((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentEnregistrementAi_role') or request.isUserInRole('agentEnregistrementTps_role'))}" styleClass="body">
+        <f:view>
+            <div id="page">  <ui:include src="/global/userAndIp.xhtml" /> </div>
+            <div id="appareilPhoto" style="width: 745px;">
+
+                <h:form styleClass="form"  enctype="multipart/form-data">
+                    <p:growl id="message" showDetail="true" />
+                    <p:outputLabel style="color: green;">#{mB_Enregistrement.demande.recu.typeDemande.nomTypeDemande} (Enregistrement : Prise de photo)</p:outputLabel>
+                    <br/>
+                    <h:panelGroup id="pgp_photo">
+                        <h:panelGrid columns="3" cellpadding="5">
+
+                            <p:outputLabel> Appareil Photo </p:outputLabel>
+                            <p:outputLabel> </p:outputLabel>
+                            <p:outputLabel> Photo prise </p:outputLabel>
+
+                            <p:photoCam style="margin:auto;" widgetVar="pc" listener="#{mB_PhotoCam.oncapture}" update="pgp_ok1 pgp_ok2 pgp_ok3" />
+                            <p:commandButton type="button" style="background-image: url('#{mB_Global.cheminAppareilPhoto()}'); background-repeat: no-repeat; width: 65px; height: 64px;" value="" onclick="PF('pc').capture()"/>
+                            <h:panelGroup id="pgp_ok1">
+                                <p:outputPanel id="op_photo">
+                                    <p:graphicImage value="#{mB_PhotoCam.filename.substring(2)}" />
+                                </p:outputPanel>
+                            </h:panelGroup>
+                        </h:panelGrid>
+                        <br/>
+                        <h:panelGroup id="pgp_ok2">
+                            <h:commandButton rendered="#{mB_PhotoCam.filename != null}" id="cbValiderPhoto" value="Valider" action="#{mB_Enregistrement.validerPhotoCam()}" />
+                            <p:outputLabel rendered="#{mB_PhotoCam.filename != null}"> ou </p:outputLabel>
+                        </h:panelGroup>
+                        <h:commandButton value="Annuler" id="cbRetour" action="#{mB_Enregistrement.boutonAnnulerPriseouUploadPhoto()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                        <h:panelGroup id="pgp_ok3">
+                            <p:outputLabel rendered="#{mB_PhotoCam.filename != null}"> ?</p:outputLabel>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+
+
+                </h:form>
+
+            </div>
+        </f:view>
+    </h:body>
+    <h:body rendered="#{!(((mB_Connexion.verifierSiConnexionActuelleEstActive(mB_Connexion.connexion)) and mB_Connexion.utilisateurConnecte.getAModifiePwdDonneParAdmin()) and (request.isUserInRole('agentEnregistrementAi_role') or request.isUserInRole('agentEnregistrementTps_role')))}" styleClass="body">
+        <f:view>
+            <div id="page"> <div id="user_and_ip"> <ui:include src="/global/userAndIp.xhtml" /> </div>
+                <div id="wrapper" style="width: 900px;">
+                    <h:form styleClass="form" >
+                        <h3 style="color: red;">ACCES REFUSE</h3>
+                        <h:commandButton value="#{mB_Global.libelleBoutonRetourMenuGeneral()}" id="cbRetourMenuGen" action="#{mB_Caisse.retournerAuMenuGeneral()}">
+                            <f:ajax execute="@this" />
+                        </h:commandButton>
+                    </h:form>
+                </div>
+            </div>
+        </f:view>
+    </h:body>
+</html>
+
